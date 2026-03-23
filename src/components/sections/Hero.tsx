@@ -116,7 +116,7 @@ function HeroBackground(): React.ReactElement {
  */
 export function Hero(): React.ReactElement {
   const subtext = useTypewriter(
-    'CISPAR is an AI agent that detects, investigates, and contains security threats — automatically. L1, L2, and L3. MITRE ATT&CK mapped. Running around the clock.',
+    'The average breach goes undetected for 280 days. Your team gets one shot to catch it. CISPAR watches 24/7 — detects, investigates, and contains automatically. Zero code. Zero expertise.',
     22,
     true
   );
@@ -142,7 +142,7 @@ export function Hero(): React.ReactElement {
           }}
         >
           <span className="w-2 h-2 rounded-full bg-safe animate-pulse-slow" aria-hidden="true" />
-          Autonomous SOC — Active 24/7
+          Attackers work 24/7. Now so does your defense.
         </motion.div>
 
         {/* Headline */}
@@ -163,7 +163,7 @@ export function Hero(): React.ReactElement {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.4, delay: 0.5 }}
           className="text-base sm:text-lg text-text-secondary max-w-xl sm:max-w-2xl mb-10 leading-relaxed min-h-[72px] sm:min-h-[56px]"
-          aria-label="CISPAR is an AI agent that detects, investigates, and contains security threats — automatically. L1, L2, and L3. MITRE ATT&CK mapped. Running around the clock."
+          aria-label="The average breach goes undetected for 280 days. Your team gets one shot to catch it. CISPAR watches 24/7 — detects, investigates, and contains automatically. Zero code. Zero expertise."
         >
           {subtext}
           <span className="inline-block w-0.5 h-4 bg-blue-400 align-middle ml-0.5 animate-pulse" aria-hidden="true" />
@@ -199,10 +199,10 @@ export function Hero(): React.ReactElement {
           className="flex flex-wrap justify-center gap-3 sm:gap-6 text-xs sm:text-sm text-text-secondary mt-8"
         >
           {[
-            'MITRE ATT&CK Mapped',
+            'Zero Code Required',
+            'No Expertise Needed',
             '<15 min Response',
-            'Evidence-First Protocol',
-            'Multi-Model AI',
+            'Learns Automatically',
           ].map((text) => (
             <span
               key={text}

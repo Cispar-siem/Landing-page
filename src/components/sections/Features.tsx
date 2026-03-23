@@ -161,7 +161,7 @@ export function Features(): React.ReactElement {
           <p className="text-sm font-semibold tracking-widest uppercase mb-3" style={{ color: '#8b5cf6' }}>
             Full-Spectrum Coverage
           </p>
-          <h2 className="section-title mb-4">Six Core Capabilities</h2>
+          <h2 className="section-title mb-4">Seven Core Capabilities</h2>
           <p className="section-subtitle">
             CISPAR doesn't just monitor. It thinks, decides, and acts — with evidence
             collected before every move.

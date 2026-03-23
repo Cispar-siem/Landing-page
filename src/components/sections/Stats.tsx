@@ -4,36 +4,36 @@ import type { Stat } from '../../types';
 
 const STATS: readonly Stat[] = [
   {
-    id: 'orgs',
-    numericEnd: 500,
+    id: 'ttps',
+    numericEnd: 50,
     prefix: '',
     suffix: '+',
-    label: 'Organizations Protected',
-    sublabel: 'Across enterprise and mid-market',
+    label: 'MITRE ATT&CK TTPs',
+    sublabel: 'Active threat hunting coverage',
   },
   {
     id: 'response',
     numericEnd: 15,
     prefix: '<',
     suffix: ' min',
-    label: 'Avg. Response Time',
-    sublabel: 'From detection to containment',
+    label: 'Detection to Containment',
+    sublabel: 'Lab-validated response time',
   },
   {
-    id: 'uptime',
-    numericEnd: 99,
+    id: 'playbooks',
+    numericEnd: 7,
     prefix: '',
-    suffix: '.9%',
-    label: 'Uptime Guarantee',
-    sublabel: 'Always-on SOC coverage',
+    suffix: '',
+    label: 'Incident Playbooks',
+    sublabel: 'Pre-built, ready to execute',
   },
   {
-    id: 'breaches',
+    id: 'code',
     numericEnd: 0,
     prefix: '',
     suffix: '',
-    label: 'Successful Breaches',
-    sublabel: 'On actively monitored clients',
+    label: 'Lines of Code to Write',
+    sublabel: 'Zero setup. Zero expertise.',
   },
 ] as const;
 
@@ -105,9 +105,9 @@ export function Stats(): React.ReactElement {
         <div
           className={`text-center mb-16 animate-on-scroll ${isVisible ? 'visible' : ''}`}
         >
-          <h2 className="section-title mb-4">By the Numbers</h2>
+          <h2 className="section-title mb-4">Where Cybersecurity Meets AI.</h2>
           <p className="section-subtitle">
-            CISPAR operates at a scale and speed no human analyst can match.
+            We took the best of two worlds and built one autonomous agent. These are the specs — tested, not invented.
           </p>
         </div>
 

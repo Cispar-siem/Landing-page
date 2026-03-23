@@ -29,7 +29,7 @@ export function TrustSignals(): React.ReactElement {
             isVisible ? 'visible' : ''
           }`}
         >
-          Built on industry-standard frameworks
+          Built on the same frameworks the best SOC teams use
         </p>
 
         <div className="flex flex-wrap justify-center gap-3 mb-10">
@@ -52,10 +52,10 @@ export function TrustSignals(): React.ReactElement {
           }`}
         >
           {[
-            { value: '500+', label: 'Organizations Protected' },
-            { value: '<15 min', label: 'Avg. Response Time' },
-            { value: '99.9%', label: 'Uptime SLA' },
-            { value: '0', label: 'Successful Breaches on Active Clients' },
+            { value: 'AI + Sec', label: 'Two worlds. One agent.' },
+            { value: '<15 min', label: 'Detection to containment' },
+            { value: '50+', label: 'ATT&CK TTPs in scope' },
+            { value: '0', label: 'Lines of code you need to write' },
           ].map(({ value, label }) => (
             <div key={label} className="text-center">
               <div className="text-2xl font-extrabold gradient-text mb-1">{value}</div>

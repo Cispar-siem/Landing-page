@@ -6,6 +6,7 @@ import { HowItWorks } from './components/sections/HowItWorks';
 import { Features } from './components/sections/Features';
 import { Terminal } from './components/sections/Terminal';
 import { Stats } from './components/sections/Stats';
+import { SocInYourPocket } from './components/sections/SocInYourPocket';
 import { CallToAction } from './components/sections/CallToAction';
 
 /**
@@ -20,6 +21,7 @@ export function App(): React.ReactElement {
       <main>
         <Hero />
         <TrustSignals />
+        <SocInYourPocket />
         <HowItWorks />
         <Features />
         <Terminal />
