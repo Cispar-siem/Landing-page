@@ -18,7 +18,7 @@ export interface Feature {
   readonly title: string;
   readonly description: string;
   readonly bullets: readonly string[];
-  readonly icon: 'detect' | 'respond' | 'hunt' | 'network' | 'report' | 'learn';
+  readonly icon: 'detect' | 'respond' | 'hunt' | 'network' | 'report' | 'learn' | 'redteam';
 }
 
 /** How it works step */

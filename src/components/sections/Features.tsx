@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import { useIntersectionObserver } from '../../hooks/useIntersectionObserver';
 import type { Feature } from '../../types';
 
@@ -56,6 +57,15 @@ const FEATURES: readonly Feature[] = [
     bullets: ['Rule updates from resolved incidents', 'NEVER/ALWAYS rule system', 'Multi-session memory persistence'],
     icon: 'learn',
   },
+  {
+    id: 'redteam',
+    tier: 'L3',
+    title: 'Red Team Simulation',
+    description:
+      'CISPAR thinks like an attacker. It actively probes your system using real offensive techniques — finding exploitable paths, misconfigurations, and privilege escalations before a real adversary does.',
+    bullets: ['Offensive TTP simulation (MITRE ATT&CK)', 'Privilege escalation & SUID/sudo abuse checks', 'Exploit path mapping before attackers find them'],
+    icon: 'redteam',
+  },
 ] as const;
 
 const TIER_COLORS = {
@@ -108,21 +118,45 @@ function FeatureIcon({ icon }: { readonly icon: Feature['icon'] }): React.ReactE
         <path d="m15 5 3 3" />
       </svg>
     ),
+    redteam: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" aria-hidden="true">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+        <path d="m9 12 2 2 4-4" />
+        <circle cx="12" cy="12" r="1" fill="currentColor" />
+        <path d="M12 8v1M12 15v1M8 12h1M15 12h1" />
+      </svg>
+    ),
   };
   return icons[icon];
 }
 
+const container = {
+  hidden: {},
+  show: {
+    transition: { staggerChildren: 0.1 },
+  },
+};
+
+const cardVariant = {
+  hidden: { opacity: 0, y: 28 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
+};
+
 /**
- * Feature grid section showcasing CISPAR's six core capabilities.
+ * Feature grid section showcasing CISPAR's core capabilities with
+ * spring hover effects and staggered entrance animations.
  */
 export function Features(): React.ReactElement {
   const { ref, isVisible } = useIntersectionObserver({ threshold: 0.05 });
 
   return (
-    <section id="capabilities" ref={ref} className="py-24" aria-label="CISPAR capabilities">
+    <section id="capabilities" ref={ref} className="py-20 sm:py-24" aria-label="CISPAR capabilities">
       <div className="section-container">
-        <div
-          className={`text-center mb-16 animate-on-scroll ${isVisible ? 'visible' : ''}`}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={isVisible ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-14"
         >
           <p className="text-sm font-semibold tracking-widest uppercase mb-3" style={{ color: '#8b5cf6' }}>
             Full-Spectrum Coverage
@@ -132,36 +166,40 @@ export function Features(): React.ReactElement {
             CISPAR doesn't just monitor. It thinks, decides, and acts — with evidence
             collected before every move.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {FEATURES.map((feature, i) => {
+        <motion.div
+          variants={container}
+          initial="hidden"
+          animate={isVisible ? 'show' : 'hidden'}
+          className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6"
+        >
+          {FEATURES.map((feature) => {
             const colors = TIER_COLORS[feature.tier];
-            const delay = `animate-on-scroll-delay-${Math.min((i % 3) + 1, 4) as 1 | 2 | 3 | 4}`;
-
             return (
-              <div
+              <motion.div
                 key={feature.id}
-                className={`card-glass p-7 transition-all duration-300 animate-on-scroll ${delay} ${
-                  isVisible ? 'visible' : ''
-                }`}
+                variants={cardVariant}
+                whileHover={{ y: -6, transition: { type: 'spring', stiffness: 400, damping: 25 } }}
+                className="card-glass p-6 sm:p-7 cursor-default"
+                style={{ willChange: 'transform' }}
               >
                 <div className="flex items-start justify-between mb-5">
                   <div
-                    className="w-12 h-12 rounded-xl flex items-center justify-center"
+                    className="w-11 h-11 rounded-xl flex items-center justify-center"
                     style={{ background: colors.bg, color: colors.text }}
                   >
                     <FeatureIcon icon={feature.icon} />
                   </div>
                   <span
-                    className="text-xs font-bold px-2.5 py-1 rounded-full mt-1"
+                    className="text-xs font-bold px-2.5 py-1 rounded-full mt-0.5"
                     style={{ background: colors.bg, color: colors.text }}
                   >
                     {feature.tier}
                   </span>
                 </div>
 
-                <h3 className="text-lg font-bold text-text-primary mb-3">{feature.title}</h3>
+                <h3 className="text-base sm:text-lg font-bold text-text-primary mb-2.5">{feature.title}</h3>
                 <p className="text-sm text-text-secondary leading-relaxed mb-5">{feature.description}</p>
 
                 <ul className="space-y-2" role="list">
@@ -176,10 +214,10 @@ export function Features(): React.ReactElement {
                     </li>
                   ))}
                 </ul>
-              </div>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
