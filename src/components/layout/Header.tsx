@@ -138,6 +138,12 @@ export function Header(): React.ReactElement {
 
           <div className="flex items-center gap-3">
             <a
+              href="#/auth"
+              className="btn-ghost text-sm hidden sm:inline-flex"
+            >
+              Login
+            </a>
+            <a
               href="#contact"
               className="btn-primary text-sm hidden sm:inline-flex"
             >
@@ -171,6 +177,13 @@ export function Header(): React.ReactElement {
                   {link.label}
                 </a>
               ))}
+              <a
+                href="#/auth"
+                onClick={closeMobileMenu}
+                className="btn-ghost mt-2 text-sm justify-center"
+              >
+                Login
+              </a>
               <a
                 href="#contact"
                 onClick={closeMobileMenu}
