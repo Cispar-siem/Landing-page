@@ -1,4 +1,6 @@
 import { HashRouter, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import { AuthModal } from './components/auth/AuthModal';
 import { Header } from './components/layout/Header';
 import { Footer } from './components/layout/Footer';
 import { Hero } from './components/sections/Hero';
@@ -12,9 +14,7 @@ import { SocInYourPocket } from './components/sections/SocInYourPocket';
 import { CallToAction } from './components/sections/CallToAction';
 import { AuthPage } from './pages/AuthPage';
 
-/**
- * Full landing page layout composed of all marketing sections.
- */
+/** Full landing page layout — visible to all users. */
 function LandingLayout(): React.ReactElement {
   return (
     <>
@@ -31,21 +31,25 @@ function LandingLayout(): React.ReactElement {
         <CallToAction />
       </main>
       <Footer />
+      <AuthModal />
     </>
   );
 }
 
 /**
- * Root application component. Uses HashRouter for GitHub Pages compatibility.
- * Routes: `/` → landing page, `/auth` → device authorization / login.
+ * Root application component.
+ * - `/` — landing page (public, modal-based auth)
+ * - `/auth` — full-page auth for CLI device authorization flow
  */
 export function App(): React.ReactElement {
   return (
-    <HashRouter>
-      <Routes>
-        <Route path="/auth" element={<AuthPage />} />
-        <Route path="/" element={<LandingLayout />} />
-      </Routes>
-    </HashRouter>
+    <AuthProvider>
+      <HashRouter>
+        <Routes>
+          <Route path="/auth" element={<AuthPage />} />
+          <Route path="/" element={<LandingLayout />} />
+        </Routes>
+      </HashRouter>
+    </AuthProvider>
   );
 }

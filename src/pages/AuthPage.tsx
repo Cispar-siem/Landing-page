@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
+import { getSupabase } from '../lib/supabase';
 
 const LICENSE_SERVER_URL =
   (import.meta.env.VITE_LICENSE_SERVER_URL as string | undefined) ??
@@ -247,33 +247,29 @@ export function AuthPage(): React.ReactElement {
   }
 
   useEffect(() => {
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event === 'SIGNED_IN' && session) {
-        await approveDevice(session.access_token);
-      }
+    const supabase = getSupabase();
+    if (!supabase) return;
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_IN' && session) await approveDevice(session.access_token);
     });
     return () => subscription.unsubscribe();
   }, []);
 
   async function handleEmailLogin(e: React.FormEvent): Promise<void> {
     e.preventDefault();
+    const supabase = getSupabase();
+    if (!supabase) return;
     setIsEmailLoading(true);
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     setIsEmailLoading(false);
-    if (error) {
-      setErrorMessage(error.message);
-      setStep('error');
-    }
+    if (error) { setErrorMessage(error.message); setStep('error'); }
   }
 
   async function handleGoogleLogin(): Promise<void> {
+    const supabase = getSupabase();
+    if (!supabase) return;
     setIsGoogleLoading(true);
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: window.location.href },
-    });
+    await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.href } });
   }
 
   return (

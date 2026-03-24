@@ -1,10 +1,16 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
+let _client: SupabaseClient | null = null;
 
 /**
- * Shared Supabase client instance configured from Vite environment variables.
- * Requires VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to be set.
+ * Returns the shared Supabase client, or null if env vars are not configured.
+ * Lazy initialization prevents crashes when VITE_SUPABASE_URL is not set.
  */
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export function getSupabase(): SupabaseClient | null {
+  if (_client) return _client;
+  const url = import.meta.env.VITE_SUPABASE_URL as string | undefined;
+  const key = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
+  if (!url || !key) return null;
+  _client = createClient(url, key);
+  return _client;
+}
