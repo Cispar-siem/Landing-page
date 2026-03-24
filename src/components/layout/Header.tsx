@@ -10,18 +10,17 @@ const NAV_LINKS: readonly NavLink[] = [
   { label: 'Contact', href: '#contact' },
 ] as const;
 
+import miPropiaImagen from '../assets/logo.png';
+
 function ShieldIcon(): React.ReactElement {
   return (
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <defs>
-        <linearGradient id="shieldGradHeader" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#3b82f6" />
-          <stop offset="100%" stopColor="#8b5cf6" />
-        </linearGradient>
-      </defs>
-      <path d="M16 2L4 7v9c0 7.18 5.14 13.9 12 15.5C22.86 29.9 28 23.18 28 16V7L16 2z" fill="url(#shieldGradHeader)" />
-      <path d="M13 16.5l2.5 2.5 5-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
+    <img 
+      src={miPropiaImagen} 
+      alt="Icono de escudo" 
+      width={32} 
+      height={32} 
+      style={{ objectFit: 'contain' }} 
+    />
   );
 }
 
