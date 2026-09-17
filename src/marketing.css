@@ -1,0 +1,93 @@
+/* Security-led marketing: restrained colour and clear hierarchy. */
+:root { --ink:#eaf0f8; --muted:#a4b2c6; --canvas:#0b1320; --surface:#121f31; --line:#29394e; --blue:#599cff; }
+.site-header { background:rgba(11,19,32,.96); }
+.brand-logo { width:34px; height:34px; object-fit:contain; }
+.btn-primary { background:#3979ec; color:white; border-radius:9px; }
+.btn-primary:hover { background:#2869db; }
+.btn-secondary { border-radius:9px; }
+.btn-primary,.btn-secondary { gap:8px; }
+.platform-tabs { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:28px; }
+.checksum { display:block; overflow-wrap:anywhere; margin-top:15px; color:#a4b2c6; font-size:11px; }
+.hero { padding:88px 0 76px; background:#0b1320; }
+.hero:before { inset:0; background:radial-gradient(ellipse at 85% 35%,rgba(34,88,151,.23),transparent 60%); filter:none; }
+.hero-layout { grid-template-columns:1fr 1fr; gap:48px; }
+.hero h1 { font-family:Inter,system-ui,sans-serif; font-size:clamp(42px,4.6vw,64px); font-weight:650; line-height:1.08; letter-spacing:-.045em; color:#f1f5fa; background:none; -webkit-text-fill-color:initial; }
+.hero-lede { font-size:17px; line-height:1.7; max-width:470px; }
+.hero-actions { gap:12px; }
+.hero-note { font-size:12px; line-height:1.7; max-width:440px; }
+.product-frame { border-radius:14px; background:#111e2e; box-shadow:0 24px 65px #0005; }
+.frame-top { height:48px; font-size:11px; background:#142337; }
+.frame-body { grid-template-columns:100px 1fr; min-height:370px; }
+.frame-body aside { font-size:10px; border-color:#28394e; }
+.frame-body section { padding:25px 20px; }
+.frame-body strong { font-size:23px; }
+.signal-grid { gap:7px; margin:23px 0; }
+.signal-grid div { padding:10px 8px; background:#16263a; border-color:#2a4058; }
+.signal-grid span { font-size:10px; }
+.signal-grid b { font-size:11px; }
+.incident-preview { padding:14px; border:1px solid #315077; border-radius:8px; background:#182b43; margin-bottom:18px; }
+.incident-label { color:#a7c9ff; font-size:10px; font-weight:700; letter-spacing:.06em; }
+.incident-preview h3 { margin:7px 0; font-size:13px; font-weight:600; }
+.incident-preview p { color:#a4b7cf; font-size:11px; line-height:1.6; margin:0; }
+.preview-caption { padding:11px 18px; border-top:1px solid #29394e; font-size:10px; color:#97a8bf; }
+.event-row { font-size:10px; line-height:1.5; }
+.tech-section { background:#f6f8fb; color:#15243a; padding:90px 0; border:0; }
+.tech-heading { max-width:680px; margin-bottom:38px; }
+.tech-heading .section-title { color:#15243a; font-size:clamp(32px,3.3vw,44px); font-weight:650; line-height:1.15; }
+.tech-heading .section-subtitle { color:#56657b; font-size:17px; line-height:1.65; }
+.tech-grid { display:block; }
+.tech-cards { grid-template-columns:repeat(3,1fr); gap:20px; }
+.tech-card { padding:28px; border:1px solid #dce3ed; border-radius:14px; background:white; }
+.tech-card:hover { transform:translateY(-3px); border-color:#9db9e7; }
+.tech-card>span { position:static; display:grid; place-items:center; width:38px; height:38px; border-radius:10px; color:#2868c8; background:#edf3fc; margin-bottom:26px; }
+.tech-card h3 { font-size:21px; letter-spacing:-.025em; }
+.tech-card p { color:#59687b; font-size:15px; line-height:1.65; }
+.product-section { padding:90px 0; }
+.section-intro { max-width:700px; }
+.section-intro h2 { font-size:clamp(32px,3.3vw,44px); font-weight:650; line-height:1.16; }
+.point-grid { margin-top:36px; }
+.point-card { background:transparent; border-radius:12px; padding:26px; }
+.point-card h3 { margin-top:22px; }
+.install-band { background:#14263e; padding:48px 0; }
+.install-layout h2 { font-size:28px; line-height:1.3; }
+.faq-section { background:#f6f8fb; color:#15243a; padding:84px 0; }
+.faq-section .section-title { color:#15243a; font-size:36px; line-height:1.15; }
+.faq-section .section-subtitle { color:#59687b; }
+.faq-section .section-intro>p { color:#59687b; }
+.faq-list { border-color:#d8e0eb; }
+.faq-list details { border-color:#d8e0eb; }
+.faq-list summary { color:#18283f; }
+.faq-list p { color:#59687b; }
+.site-footer { background:#0b1320; }
+.eyebrow { color:#8fbaff; }
+.tech-section .eyebrow,.faq-section .eyebrow { color:#2868c8; }
+.tech-card svg { width:22px; height:22px; }
+a:focus-visible,button:focus-visible,select:focus-visible,summary:focus-visible { outline:3px solid #75aaff; outline-offset:5px; }
+@media (max-width:1000px) and (min-width:801px) {
+  .nav-shell { gap:18px; }
+  .nav-links,.nav-actions { gap:12px; }
+  .hero-layout { gap:24px; }
+  .frame-body { grid-template-columns:1fr; }
+  .frame-body aside { display:none; }
+}
+@media (max-width:800px) {
+  .hero { padding:52px 0; }
+  .hero-layout { grid-template-columns:1fr; gap:36px; }
+  .hero h1 { font-size:clamp(38px,10vw,52px); }
+  .hero-lede { font-size:16px; }
+  .hero-actions { align-items:stretch; }
+  .frame-body { grid-template-columns:1fr; min-height:0; }
+  .frame-body aside { display:none; }
+  .signal-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .frame-top { padding:0 12px; font-size:10px; }
+  .tech-cards { grid-template-columns:1fr; }
+  .tech-section,.product-section,.faq-section { padding:60px 0; }
+  .tech-heading { text-align:left; }
+  .tech-card { padding:24px; }
+  .tech-card>span { margin-bottom:18px; }
+  .install-layout h2 { font-size:25px; }
+}
+@media (prefers-reduced-motion:reduce) {
+  html { scroll-behavior:auto; }
+  *,*::before,*::after { animation:none !important; transition:none !important; }
+}

@@ -1,12 +1,32 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { detectPlatform, loadReleaseCatalog, releaseCatalog, type Release } from '../lib/releases';
+import { detectPlatform, loadReleaseCatalog, releaseCatalog, type Release, type OperatingSystem } from '../lib/releases';
+import { useI18n } from '../i18n/I18nContext';
 
 const osLabels = { macos: 'macOS', windows: 'Windows', linux: 'Linux' } as const;
 export function DownloadPage(): React.ReactElement {
-  const [recommended, setRecommended] = useState<string | null>(null);
+  const { t } = useI18n();
+  const [platform] = useState(detectPlatform);
+  const [selected, setSelected] = useState<OperatingSystem | 'all'>(platform?.os ?? 'all');
   const [releases, setReleases] = useState<readonly Release[]>(releaseCatalog);
-  useEffect(() => { const platform = detectPlatform(); if (platform) setRecommended(`${platform.os}-${platform.arch}`); void loadReleaseCatalog().then(setReleases); }, []);
-  const handleDownload = (release: Release): void => { if (release.url) window.location.assign(release.url); };
-  return <section className="page"><div className="section-container"><div className="page-heading"><p className="eyebrow">DESCARGAS</p><h1>Instala CISPAR en tu entorno.</h1><p>Selecciona tu plataforma. Cada release publicada incluye su suma SHA-256 para verificar la descarga antes de instalarla.</p></div><div className="download-grid">{releases.map((release) => { const isRecommended = recommended === `${release.os}-${release.arch}`; return <article className={`release-card ${isRecommended ? 'recommended' : ''}`} key={release.id}>{isRecommended && <p className="recommendation">RECOMENDADO PARA ESTE EQUIPO</p>}<p className="release-os">{osLabels[release.os]}</p><h2>{release.label.replace(`${osLabels[release.os]} · `, '')}</h2><p>{release.requirements}</p><div className="release-meta"><span>{release.version ? `Versión ${release.version}` : 'Próxima release'}</span><span>{release.sha256 ? 'SHA-256 disponible' : 'Pendiente de publicación'}</span></div><button className={release.available ? 'btn-primary' : 'btn-disabled'} disabled={!release.available} onClick={() => handleDownload(release)}>{release.available ? 'Descargar instalador' : 'Instalador en preparación'}</button></article>; })}</div><div className="download-help"><div><p className="eyebrow">DESPUÉS DE DESCARGAR</p><h2>El instalador prepara Docker y abre la configuración local.</h2><ol><li>Ejecuta el instalador correspondiente a tu sistema.</li><li>Inicia sesión cuando CISPAR solicite autorización.</li><li>Completa la configuración guiada en tu navegador.</li></ol></div><div className="help-actions"><p>¿Necesitas ayuda con arquitectura, requisitos o una instalación empresarial?</p><Link className="btn-secondary" to="/contact">Contactar al equipo</Link></div></div></div></section>;
+  useEffect(() => { let active = true; void loadReleaseCatalog().then((catalog) => { if (active) setReleases(catalog); }); return () => { active = false; }; }, []);
+  return <section className="page"><div className="section-container">
+    <div className="page-heading"><p className="eyebrow">{t('download.eyebrow')}</p><h1>{t('download.title')}</h1><p>{t(platform ? 'download.detected' : 'download.body')}{platform && ` ${osLabels[platform.os]}.`}</p><p>{t('download.archHelp')}</p></div>
+    <div className="platform-tabs" role="group" aria-label={t('download.platform')}>
+      {(['all','macos','windows','linux'] as const).map((os) => <button key={os} type="button" aria-pressed={selected === os} className={selected === os ? 'btn-primary' : 'btn-secondary'} onClick={() => setSelected(os)}>{os === 'all' ? t('download.all') : osLabels[os]}</button>)}
+    </div>
+    <div className="download-grid">{releases.filter((release) => selected === 'all' || release.os === selected).map((release) => {
+      const recommended = platform?.os === release.os && platform.arch === release.arch;
+      const available = release.available && Boolean(release.url);
+      return <article className={`release-card ${recommended ? 'recommended' : ''}`} key={release.id}>
+        {recommended && <p className="recommendation">{t('download.recommended')}</p>}
+        <p className="release-os">{osLabels[release.os]}</p><h2>{release.label.replace(`${osLabels[release.os]} · `, '')}</h2>
+        <p>{release.os === 'linux' ? t('download.dockerLinux') : t('download.dockerDesktop')}</p>
+        <div className="release-meta"><span>{release.version ?? t('download.pending')}</span><span>{release.sha256 ? 'SHA-256' : t('download.checksum')}</span></div>
+        {available ? <a className="btn-primary" href={release.url}>{t('download.install')}</a> : <button className="btn-disabled" disabled>{t('download.button')}</button>}
+        {release.sha256 && <code className="checksum">{release.sha256}</code>}
+      </article>;
+    })}</div>
+    <div className="download-help"><div><p className="eyebrow">{t('download.after')}</p><h2>{t('download.afterTitle')}</h2><ol><li>{t('download.step1')}</li><li>{t('download.step2')}</li><li>{t('download.step3')}</li></ol></div><div className="help-actions"><p>{t('download.help')}</p><Link className="btn-secondary" to="/contact">{t('download.contact')}</Link></div></div>
+  </div></section>;
 }

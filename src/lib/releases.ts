@@ -25,11 +25,14 @@ export async function loadReleaseCatalog(): Promise<readonly Release[]> {
   }
 }
 
-export function detectPlatform(): { os: OperatingSystem; arch: Architecture } | null {
+export function detectPlatform(): { os: OperatingSystem; arch: Architecture | null } | null {
   const ua = navigator.userAgent.toLowerCase();
-  const arch: Architecture = /arm|aarch64/.test(ua) ? 'arm64' : 'x64';
-  if (/mac/.test(ua)) return { os: 'macos', arch };
-  if (/win/.test(ua)) return { os: 'windows', arch: 'x64' };
+  // Phones/tablets must not be offered a desktop installer. Apple Silicon
+  // browsers often report Intel: OS detection is not architecture detection.
+  if (/android|iphone|ipad|ipod/.test(ua) || (/mac/.test(ua) && navigator.maxTouchPoints > 1)) return null;
+  const arch: Architecture | null = /arm|aarch64/.test(ua) ? 'arm64' : /x86_64|amd64|win64|x64/.test(ua) ? 'x64' : null;
+  if (/mac/.test(ua)) return { os: 'macos', arch: null };
+  if (/win/.test(ua)) return { os: 'windows', arch };
   if (/linux/.test(ua)) return { os: 'linux', arch };
   return null;
 }
