@@ -5,6 +5,12 @@ import { Footer } from './components/layout/Footer';
 import { Header } from './components/layout/Header';
 import { Hero } from './components/sections/Hero';
 import { ProductOverview } from './components/sections/ProductOverview';
+import { TrustSignals } from './components/sections/TrustSignals';
+import { SocInYourPocket } from './components/sections/SocInYourPocket';
+import { HowItWorks } from './components/sections/HowItWorks';
+import { Features } from './components/sections/Features';
+import { Terminal } from './components/sections/Terminal';
+import { Stats } from './components/sections/Stats';
 import { DownloadPage } from './pages/DownloadPage';
 import { PricingPage } from './pages/PricingPage';
 import { ContactPage } from './pages/ContactPage';
@@ -14,7 +20,9 @@ function SiteLayout({ children }: { readonly children: React.ReactNode }): React
   return <><Header /><main>{children}</main><Footer /><AuthModal /></>;
 }
 
-function LandingPage(): React.ReactElement { return <SiteLayout><Hero /><ProductOverview /></SiteLayout>; }
+function LandingPage(): React.ReactElement {
+  return <SiteLayout><Hero /><TrustSignals /><ProductOverview /><SocInYourPocket /><HowItWorks /><Features /><Terminal /><Stats /></SiteLayout>;
+}
 
 export function App(): React.ReactElement {
   return <AuthProvider><HashRouter><Routes>
