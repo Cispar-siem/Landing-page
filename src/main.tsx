@@ -4,6 +4,7 @@ import './index.css';
 import './pages.css';
 import './hybrid.css';
 import './tech.css';
+import './contact.css';
 import { App } from './App';
 
 const root = document.getElementById('root');

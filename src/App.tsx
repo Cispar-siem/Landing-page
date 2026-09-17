@@ -7,6 +7,8 @@ import { Hero } from './components/sections/Hero';
 import { ProductOverview } from './components/sections/ProductOverview';
 import { TechnologyShowcase } from './components/sections/TechnologyShowcase';
 import { I18nProvider } from './i18n/I18nContext';
+import { Faq } from './components/sections/Faq';
+import { WhatsAppContact } from './components/layout/WhatsAppContact';
 import { DownloadPage } from './pages/DownloadPage';
 import { PricingPage } from './pages/PricingPage';
 import { ContactPage } from './pages/ContactPage';
@@ -17,7 +19,7 @@ function SiteLayout({ children }: { readonly children: React.ReactNode }): React
 }
 
 function LandingPage(): React.ReactElement {
-  return <SiteLayout><Hero /><TechnologyShowcase /><ProductOverview /></SiteLayout>;
+  return <SiteLayout><Hero /><TechnologyShowcase /><ProductOverview /><Faq /><WhatsAppContact /></SiteLayout>;
 }
 
 export function App(): React.ReactElement {
