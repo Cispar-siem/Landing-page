@@ -5,12 +5,8 @@ import { Footer } from './components/layout/Footer';
 import { Header } from './components/layout/Header';
 import { Hero } from './components/sections/Hero';
 import { ProductOverview } from './components/sections/ProductOverview';
-import { TrustSignals } from './components/sections/TrustSignals';
-import { SocInYourPocket } from './components/sections/SocInYourPocket';
-import { HowItWorks } from './components/sections/HowItWorks';
-import { Features } from './components/sections/Features';
-import { Terminal } from './components/sections/Terminal';
-import { Stats } from './components/sections/Stats';
+import { TechnologyShowcase } from './components/sections/TechnologyShowcase';
+import { I18nProvider } from './i18n/I18nContext';
 import { DownloadPage } from './pages/DownloadPage';
 import { PricingPage } from './pages/PricingPage';
 import { ContactPage } from './pages/ContactPage';
@@ -21,16 +17,16 @@ function SiteLayout({ children }: { readonly children: React.ReactNode }): React
 }
 
 function LandingPage(): React.ReactElement {
-  return <SiteLayout><Hero /><TrustSignals /><ProductOverview /><SocInYourPocket /><HowItWorks /><Features /><Terminal /><Stats /></SiteLayout>;
+  return <SiteLayout><Hero /><TechnologyShowcase /><ProductOverview /></SiteLayout>;
 }
 
 export function App(): React.ReactElement {
-  return <AuthProvider><HashRouter><Routes>
+  return <I18nProvider><AuthProvider><HashRouter><Routes>
     <Route path="/" element={<LandingPage />} />
     <Route path="/download" element={<SiteLayout><DownloadPage /></SiteLayout>} />
     <Route path="/pricing" element={<SiteLayout><PricingPage /></SiteLayout>} />
     <Route path="/contact" element={<SiteLayout><ContactPage /></SiteLayout>} />
     <Route path="/auth" element={<AuthPage />} />
     <Route path="*" element={<LandingPage />} />
-  </Routes></HashRouter></AuthProvider>;
+  </Routes></HashRouter></AuthProvider></I18nProvider>;
 }

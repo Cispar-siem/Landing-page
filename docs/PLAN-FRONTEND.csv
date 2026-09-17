@@ -1,0 +1,14 @@
+fase,tarea,estado,dependencia,resultado
+1,Rutas y navegación,hecho,ninguna,Inicio descargas pricing contacto auth
+1,Diseño híbrido tech,en curso,decisión visual,Conservar elementos del diseño anterior y nueva conversión
+2,Selector de plataforma,hecho,catálogo de releases,macOS Windows Linux ARM64 x64
+2,Manifiesto de releases,en curso,CI del monorepo,releases.json con URL versión SHA-256
+2,Descargas reales,bloqueado,binarios y firma,Instaladores publicados desde cispar-siem-mono
+2,Pricing,en curso,decisión comercial,Planes y CTA Enterprise
+2,Formulario de contacto,hecho,cliente de correo,Demo cotización instalación
+3,Claves de traducción,en curso,diccionario TypeScript,ES EN y extensión futura
+3,Selector de idioma,en curso,claves de traducción,Idioma persistente
+3,Build,hecho,ninguna,npm run build
+3,Lint,hecho,configuración ESLint,Sin errores bloqueantes
+4,CI releases,pendiente,cispar-siem-mono,Artefactos y hashes verificables
+4,Pruebas multiplataforma,pendiente,instaladores reales,macOS Windows Linux

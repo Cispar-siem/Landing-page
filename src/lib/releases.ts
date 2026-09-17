@@ -10,6 +10,21 @@ export const releaseCatalog: readonly Release[] = [
   { id: 'linux-arm64', os: 'linux', arch: 'arm64', label: 'Linux · ARM64', requirements: 'Docker Engine y Docker Compose', available: false },
 ];
 
+type ReleaseManifest = { releases?: Release[] };
+
+/** Loads published releases. Until CI publishes a manifest, the UI safely shows unavailable installers. */
+export async function loadReleaseCatalog(): Promise<readonly Release[]> {
+  const manifestUrl = (import.meta.env.VITE_RELEASE_MANIFEST_URL as string | undefined) ?? '/Landing-page/releases.json';
+  try {
+    const response = await fetch(manifestUrl, { headers: { Accept: 'application/json' } });
+    if (!response.ok) return releaseCatalog;
+    const manifest = await response.json() as ReleaseManifest;
+    return Array.isArray(manifest.releases) ? manifest.releases : releaseCatalog;
+  } catch {
+    return releaseCatalog;
+  }
+}
+
 export function detectPlatform(): { os: OperatingSystem; arch: Architecture } | null {
   const ua = navigator.userAgent.toLowerCase();
   const arch: Architecture = /arm|aarch64/.test(ua) ? 'arm64' : 'x64';
