@@ -1,0 +1,1 @@
+export function PricingPage(): React.ReactElement { return <section className="page"><div className="section-container page-heading"><p className="eyebrow">PRICING</p><h1>Planes que se ajustan a tu operación.</h1><p>Estamos preparando la comparación de capacidades y el contacto para necesidades empresariales.</p></div></section>; }

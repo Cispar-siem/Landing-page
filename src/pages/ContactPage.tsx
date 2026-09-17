@@ -1,0 +1,1 @@
+export function ContactPage(): React.ReactElement { return <section className="page"><div className="section-container page-heading"><p className="eyebrow">CONTACTO</p><h1>Hablemos de tu entorno.</h1><p>Solicita una demo, cotización o ayuda para planear tu despliegue.</p></div></section>; }

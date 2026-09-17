@@ -1,0 +1,1 @@
+export function DownloadPage(): React.ReactElement { return <section className="page"><div className="section-container page-heading"><p className="eyebrow">DESCARGAS</p><h1>Instala CISPAR en tu entorno.</h1><p>La selección de plataforma y las versiones verificadas estarán disponibles aquí.</p></div></section>; }
