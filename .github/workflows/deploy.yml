@@ -43,9 +43,7 @@ jobs:
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
-          VITE_LICENSE_SERVER_URL: ${{ secrets.VITE_LICENSE_SERVER_URL }}
-          VITE_RELEASE_MANIFEST_URL: ${{ vars.VITE_RELEASE_MANIFEST_URL || secrets.VITE_RELEASE_MANIFEST_URL || '/Landing-page/releases.json' }}
-          VITE_WHATSAPP_NUMBER: ${{ secrets.VITE_WHATSAPP_NUMBER || vars.VITE_WHATSAPP_NUMBER }}
+          VITE_PLATFORM_API_URL: ${{ vars.VITE_PLATFORM_API_URL || secrets.VITE_PLATFORM_API_URL }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

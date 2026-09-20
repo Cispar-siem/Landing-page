@@ -68,7 +68,7 @@ Repositorio inspeccionado: /home/axel/Landing-page.
 |---|---|---|
 | React 18, TypeScript, Vite, Supabase JS | package.json | Conservar stack |
 | Auth web y autorización de dispositivo | src/context/AuthContext.tsx; src/components/auth/AuthModal.tsx | Auditar flujos existentes antes de reemplazar |
-| Endpoint externo de licencia referenciado | VITE_LICENSE_SERVER_URL | No acredita que su implementación esté revisada |
+| Endpoint de plataforma referenciado | VITE_PLATFORM_API_URL | La URL debe apuntar a Cispar-platform y ser HTTPS en producción |
 | HashRouter y base /Landing-page/ | src/App.tsx; vite.config.ts | Coordinar rutas, callbacks y hosting |
 | Catálogo con todas las releases no disponibles | public/releases.json | No habilitar descargas ficticias |
 | Manifest sin validación estructural estricta | src/lib/releases.ts | Validar campos y URLs antes de enlazar |

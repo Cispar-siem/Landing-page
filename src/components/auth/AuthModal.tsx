@@ -3,9 +3,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { getSupabase } from '../../lib/supabase';
 import { useAuth } from '../../context/AuthContext';
 
-const LICENSE_SERVER_URL =
-  (import.meta.env.VITE_LICENSE_SERVER_URL as string | undefined) ??
-  'https://cispar-license-server.fly.dev';
+const PLATFORM_API_URL =
+  (import.meta.env.VITE_PLATFORM_API_URL as string | undefined) ??
+  'http://localhost:8787';
 
 function getUserCode(): string | null {
   const hash = window.location.hash;
@@ -72,7 +72,7 @@ export function AuthModal(): React.ReactElement {
     if (!userCode) { setStep('success'); return; }
     setStep('approving');
     try {
-      const res = await fetch(`${LICENSE_SERVER_URL}/device/approve`, {
+      const res = await fetch(`${PLATFORM_API_URL}/device/approve`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userCode, supabaseToken: accessToken }),

@@ -48,15 +48,17 @@
 - THEN the frontend proceeds normally (e.g., shows success, redirects to landing or dashboard)
 - AND no device approval screen is shown
 
-## Requirement: Secure transmission to license serverThe frontend MUST send the device code and Supabase token to the license server over HTTPS with proper headers.
+## Requirement: Secure transmission to platform API
+
+The frontend MUST send the public user code and Supabase token to the CISPAR Platform API over HTTPS with proper headers.
 
 ### Scenario: Device approval request
 - GIVEN the user has confirmed device approval on the explicit screen
-- THEN the frontend makes a POST request to ${VITE_LICENSE_SERVER_URL}/device/approve
-- AND the request body is JSON: { deviceCode: string, supabaseToken: string }
+- THEN the frontend makes a POST request to ${VITE_PLATFORM_API_URL}/device/approve
+- AND the request body is JSON: { userCode: string, supabaseToken: string }
 - AND the supabaseToken is the access_token from Supabase.auth.session()
 - AND the request includes header Content-Type: application/json
-- AND the license server URL is configured via environment variable (VITE_LICENSE_SERVER_URL)
+- AND the platform API URL is configured via environment variable (VITE_PLATFORM_API_URL)
 
 ## Requirement: Handling of license server responsesThe frontend MUST interpret responses from the license server and update UI accordingly.
 

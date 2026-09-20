@@ -38,9 +38,9 @@ El flujo por dispositivo ya cuenta con código funcional e integrado en los tres
 ### C. Frontend / Landing Page
 - **Ubicación:** `/home/axel/Landing-page/src/components/auth/AuthModal.tsx` y `src/pages/AuthPage.tsx`
 - **Comportamiento:**
-  - Extrae el código de terminal de la URL (`window.location.hash`, parámetro `?code=`).
+  - Extrae el código público de usuario de la URL (`window.location.hash`, parámetro `?user_code=`).
   - Permite inicio de sesión con email/password o Google OAuth mediante Supabase Auth.
-  - Al completar la autenticación, envía `POST ${VITE_LICENSE_SERVER_URL}/device/approve` con el `deviceCode` y el `access_token` de Supabase.
+  - Después de confirmación explícita, envía `POST ${VITE_PLATFORM_API_URL}/device/approve` con el `userCode` y el `access_token` de Supabase.
 
 ---
 
