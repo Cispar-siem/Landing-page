@@ -8,6 +8,16 @@ Documento de seguimiento vivo según la especificación de `PLAN-CISPAR-PLATAFOR
 
 ## Resumen General de Tareas
 
+### Deployment repository preparation — 2026-09-20
+
+- Vercel deployment contract added in `vercel.json`; build output is `dist`
+  and Vite now uses domain-root asset URLs.
+- GitHub Actions now validates lint, tests, and the production build without
+  publishing to GitHub Pages. Vercel Git integration remains the deployer.
+- Local verification completed: `npm run lint`, `npm test`, and
+  `npm run build` exited successfully. A real Vercel deployment remains
+  pending account connection and production environment variables.
+
 | ID | Tarea | Estado | Siguiente acción / Bloqueo |
 |---|---|---|---|
 | **T00** | Inventario de landing, backend y desktop; auth, instalación, billing existente | **verificado** | Completado. Decisión registrada en `docs/AUTH-DECISION.md`. |

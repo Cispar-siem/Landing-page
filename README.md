@@ -2,7 +2,7 @@
 
 > Detects, investigates, and contains threats automatically. L1, L2, and L3. 24/7.
 
-[![Deploy to GitHub Pages](https://github.com/Cispar-siem/Landing-page/actions/workflows/deploy.yml/badge.svg)](https://github.com/Cispar-siem/Landing-page/actions/workflows/deploy.yml)
+[![Verify landing](https://github.com/Cispar-siem/Landing-page/actions/workflows/deploy.yml/badge.svg)](https://github.com/Cispar-siem/Landing-page/actions/workflows/deploy.yml)
 
 ---
 
@@ -14,7 +14,7 @@ CISPAR is an autonomous Security Operations Center (SOC) AI agent that replaces 
 - **L2 — Response**: Collect forensic evidence, execute playbooks, contain threats autonomously
 - **L3 — Hunting**: Proactively search for TTPs, identify detection gaps, apply system hardening
 
-This repository is the public landing page hosted on GitHub Pages.
+This repository is the public landing page deployed through Vercel.
 
 ---
 
@@ -26,8 +26,8 @@ This repository is the public landing page hosted on GitHub Pages.
 | Styling | Tailwind CSS v3 |
 | Animations | Framer Motion |
 | Bundler | Vite 5 |
-| Hosting | GitHub Pages |
-| CI/CD | GitHub Actions |
+| Hosting | Vercel |
+| CI | GitHub Actions |
 
 ---
 
@@ -63,7 +63,7 @@ The dev server runs at `http://localhost:5173`.
 Landing-page/
 ├── .github/
 │   └── workflows/
-│       └── deploy.yml          # GitHub Actions CI/CD (Pages artifact deployment)
+│       └── deploy.yml          # GitHub Actions verification before Vercel promotion
 ├── docs/                       # Implementation status, architecture & plans
 ├── public/
 │   └── releases.json           # Catalog of downloadable releases
@@ -80,7 +80,8 @@ Landing-page/
 ├── tests/
 │   └── platform.test.mjs       # Platform detection tests
 ├── index.html
-├── vite.config.ts              # base: '/Landing-page/' for GH Pages
+├── vercel.json                 # Vercel build contract
+├── vite.config.ts              # domain-root asset paths for Vercel
 ├── tailwind.config.js
 ├── tsconfig.json
 └── package.json
@@ -90,18 +91,21 @@ Landing-page/
 
 ## Deployment
 
-Deployment is fully automated via GitHub Actions on every push to `main`.
+Vercel deploys this repository through its Git integration. GitHub Actions
+independently verifies linting, tests and the production bundle on every push.
 
 **How it works:**
-1. GitHub Actions runs `npm run lint` and `npm test`
-2. It compiles the bundle with `npm run build`
-3. The `dist/` folder is uploaded as a GitHub Pages artifact (`actions/upload-pages-artifact@v3`)
-4. GitHub Pages deploys the artifact directly to production (`actions/deploy-pages@v4`)
+1. In Vercel, import `Cispar-siem/Landing-page`.
+2. Set `main` as the production branch. Vercel detects `vercel.json` and uses
+   `npm ci`, `npm run build`, and `dist`.
+3. Add only browser-safe variables in Vercel: `VITE_PLATFORM_API_URL`,
+   `VITE_SUPABASE_URL`, and `VITE_SUPABASE_ANON_KEY` when Supabase is enabled.
+4. Every commit to `main` is a production deployment; pull requests receive
+   preview deployments after the GitHub verification workflow passes.
 
-**Manual trigger:** Go to Actions → Deploy to GitHub Pages → Run workflow.
-
-**GitHub Pages setup (one time):**
-- Repository Settings → Pages → Build and deployment → Source: **GitHub Actions**
+Never configure server credentials, service-role keys, payment secrets or GCP
+credentials with a `VITE_` prefix: Vite embeds those values into the public
+browser bundle.
 
 ---
 

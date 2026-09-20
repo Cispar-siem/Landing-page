@@ -2,6 +2,17 @@
 
 Este archivo contiene decisiones que deben mantenerse entre sesiones. Las decisiones nuevas se agregan arriba de las anteriores con fecha y motivo.
 
+## D-005 — 2026-09-20 — Landing desplegado en Vercel
+
+Estado: aceptada
+
+El landing público se despliega desde `Cispar-siem/Landing-page` mediante la
+integración Git de Vercel. GitHub Actions conserva lint, test y build como
+validación independiente; no publica artefactos en GitHub Pages.
+
+Motivo: Vercel administra previews y el dominio público sin mezclar el
+marketing con el plano de control de GCP.
+
 ## D-004 — 2026-09-20 — Landing sin login obligatorio
 
 Estado: aceptada
