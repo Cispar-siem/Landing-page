@@ -4,23 +4,44 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: '#0a0a0f',
-        surface: '#111118',
+        background: '#0b1320',
+        canvas: '#0b1320',
+        surface: '#121f31',
+        light: {
+          surface: '#f6f8fb',
+          text: '#15243a',
+          muted: '#59687b',
+          border: '#dce3ed',
+        },
         accent: {
-          blue: '#3b82f6',
+          blue: '#3979ec',
+          hover: '#2869db',
           purple: '#8b5cf6',
         },
         safe: '#10b981',
         danger: '#ef4444',
         cyan: '#06b6d4',
         text: {
-          primary: '#f1f5f9',
-          secondary: '#94a3b8',
+          primary: '#eaf0f8',
+          secondary: '#a4b2c6',
         },
-        border: 'rgba(255,255,255,0.08)',
+        border: '#29394e',
+        line: '#29394e',
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
+        mono: ['JetBrains Mono', 'monospace'],
+      },
+      borderRadius: {
+        control: '8px',
+        surface: '12px',
+      },
+      maxWidth: {
+        container: '1120px',
+        prose: '65ch',
+      },
+      transitionDuration: {
+        state: '180ms',
       },
       backgroundImage: {
         'gradient-accent': 'linear-gradient(135deg, #3b82f6, #8b5cf6)',

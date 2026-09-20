@@ -6,6 +6,7 @@ import './hybrid.css';
 import './tech.css';
 import './contact.css';
 import './marketing.css';
+import './landing-sections.css';
 import { App } from './App';
 
 const root = document.getElementById('root');

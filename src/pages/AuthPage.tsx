@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { getSupabase } from '../lib/supabase';
 
 const LICENSE_SERVER_URL =
@@ -6,20 +6,20 @@ const LICENSE_SERVER_URL =
   'https://cispar-license-server.fly.dev';
 
 /**
- * Extracts the `code` query parameter from the hash-based URL used by HashRouter.
- * Example: `https://.../#/auth?code=XXXX` → `"XXXX"`
- * @returns The device code string, or null if not present.
+ * Extracts the public user code from the hash-based verification URL.
+ * The device secret is never placed in a browser URL.
  */
-function getDeviceCode(): string | null {
+function getUserCode(): string | null {
   const hash = window.location.hash;
   const queryStart = hash.indexOf('?');
   if (queryStart === -1) return null;
   const params = new URLSearchParams(hash.slice(queryStart));
-  return params.get('code');
+  const value = params.get('user_code');
+  return value && /^[A-F0-9]{10}$/.test(value) ? value : null;
 }
 
 /** Represents the current step of the authorization flow. */
-type AuthStep = 'login' | 'approving' | 'success' | 'error';
+type AuthStep = 'login' | 'confirm_device' | 'approving' | 'success' | 'error';
 
 /** Google "G" logo inline SVG, color version. */
 function GoogleIcon(): React.ReactElement {
@@ -203,8 +203,8 @@ function ErrorView({
  * Auth page component handling both email/password and Google OAuth flows.
  *
  * Supports two modes:
- * - **CLI authorization**: URL contains `?code=XXXX` — after login, approves
- *   the device code against the license server.
+ * - **Device authorization**: URL contains `?user_code=XXXX` — after login,
+ *   the user explicitly approves that short public code.
  * - **Standalone login**: No code present — authenticates the user only.
  *
  * Must be rendered under HashRouter at the `/auth` route.
@@ -217,10 +217,10 @@ export function AuthPage(): React.ReactElement {
   const [isEmailLoading, setIsEmailLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
-  const deviceCode = getDeviceCode();
+  const userCode = getUserCode();
 
-  async function approveDevice(accessToken: string): Promise<void> {
-    if (!deviceCode) {
+  const approveDevice = useCallback(async (accessToken: string): Promise<void> => {
+    if (!userCode) {
       setStep('success');
       return;
     }
@@ -229,7 +229,7 @@ export function AuthPage(): React.ReactElement {
       const res = await fetch(`${LICENSE_SERVER_URL}/device/approve`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ deviceCode, supabaseToken: accessToken }),
+        body: JSON.stringify({ userCode, supabaseToken: accessToken }),
       });
       if (res.ok) {
         setStep('success');
@@ -244,16 +244,27 @@ export function AuthPage(): React.ReactElement {
       setErrorMessage('Could not connect to the server. Please try again.');
       setStep('error');
     }
-  }
+  }, [userCode]);
 
   useEffect(() => {
     const supabase = getSupabase();
     if (!supabase) return;
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event === 'SIGNED_IN' && session) await approveDevice(session.access_token);
+      if (event === 'SIGNED_IN' && session) setStep(userCode ? 'confirm_device' : 'success');
     });
     return () => subscription.unsubscribe();
-  }, []);
+  }, [userCode]);
+
+  async function confirmDevice(): Promise<void> {
+    const supabase = getSupabase();
+    const { data } = await supabase?.auth.getSession() ?? { data: { session: null } };
+    if (!data.session) {
+      setErrorMessage('Your session has expired. Please sign in again.');
+      setStep('error');
+      return;
+    }
+    await approveDevice(data.session.access_token);
+  }
 
   async function handleEmailLogin(e: React.FormEvent): Promise<void> {
     e.preventDefault();
@@ -303,7 +314,7 @@ export function AuthPage(): React.ReactElement {
             <h1 className="text-2xl font-bold gradient-text">CISPAR SOC</h1>
             <p className="text-sm text-text-secondary mt-1">Autonomous Security Operations</p>
           </div>
-          {deviceCode !== null && step === 'login' && (
+          {userCode !== null && step === 'login' && (
             <div
               className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium"
               style={{
@@ -322,6 +333,16 @@ export function AuthPage(): React.ReactElement {
         </div>
 
         {step === 'approving' && <ApprovingView />}
+        {step === 'confirm_device' && (
+          <div className="flex flex-col items-center gap-5 py-4 text-center">
+            <div>
+              <p className="text-lg font-semibold text-text-primary">Authorize this device?</p>
+              <p className="text-sm text-text-secondary mt-2">Only approve the code shown by the CISPAR installer.</p>
+              <code className="inline-block px-3 py-1.5 rounded-lg bg-surface border border-line text-sm font-mono text-accent-blue font-bold my-3">{userCode}</code>
+            </div>
+            <button type="button" onClick={() => void confirmDevice()} className="btn-primary w-full justify-center">Authorize this device</button>
+          </div>
+        )}
         {step === 'success' && <SuccessView />}
         {step === 'error' && (
           <ErrorView

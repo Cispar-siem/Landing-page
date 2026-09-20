@@ -1,3 +1,24 @@
 import { Link } from 'react-router-dom';
 import { useI18n } from '../../i18n/I18nContext';
-export function Footer(): React.ReactElement { const { t } = useI18n(); return <footer className="site-footer"><div className="section-container footer-shell"><div><p className="footer-brand">CISPAR</p><p className="footer-copy">{t('footer.tagline')}</p></div><div className="footer-links"><Link to="/download">{t('nav.download')}</Link><Link to="/pricing">{t('nav.pricing')}</Link><Link to="/contact">{t('nav.contact')}</Link></div><p className="footer-copy">© {new Date().getFullYear()} CISPAR</p></div></footer>; }
+
+export function Footer(): React.ReactElement {
+  const { t } = useI18n();
+  return (
+    <footer className="site-footer">
+      <div className="section-container footer-shell">
+        <div>
+          <p className="footer-brand">CISPAR</p>
+          <p className="footer-copy">{t('footer.tagline')}</p>
+        </div>
+        <div className="footer-links">
+          <Link to="/download">{t('nav.download')}</Link>
+          <Link to="/pricing">{t('nav.pricing')}</Link>
+          <Link to="/contact">{t('nav.contact')}</Link>
+          <a href="mailto:soporte@cispar.io">{t('footer.support')}</a>
+          <span className="footer-copy">v2.0</span>
+        </div>
+        <p className="footer-copy">© {new Date().getFullYear()} CISPAR</p>
+      </div>
+    </footer>
+  );
+}

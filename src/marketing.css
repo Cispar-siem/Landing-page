@@ -1,21 +1,21 @@
 /* Security-led marketing: restrained colour and clear hierarchy. */
-:root { --ink:#eaf0f8; --muted:#a4b2c6; --canvas:#0b1320; --surface:#121f31; --line:#29394e; --blue:#599cff; }
+:root { --ink:#eaf0f8; --muted:#a4b2c6; --canvas:#0b1320; --surface:#121f31; --line:#29394e; --blue:#3979ec; }
 .site-header { background:rgba(11,19,32,.96); }
 .brand-logo { width:34px; height:34px; object-fit:contain; }
-.btn-primary { background:#3979ec; color:white; border-radius:9px; }
+.btn-primary { background:#3979ec; color:white; border-radius:8px; transition:background 180ms ease,transform 180ms ease; }
 .btn-primary:hover { background:#2869db; }
-.btn-secondary { border-radius:9px; }
+.btn-secondary { border-radius:8px; transition:border-color 180ms ease,background 180ms ease; }
 .btn-primary,.btn-secondary { gap:8px; }
 .platform-tabs { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:28px; }
-.checksum { display:block; overflow-wrap:anywhere; margin-top:15px; color:#a4b2c6; font-size:11px; }
+.checksum { display:block; overflow-wrap:anywhere; margin-top:15px; color:#a4b2c6; font-size:11px; font-family:'JetBrains Mono',monospace; }
 .hero { padding:88px 0 76px; background:#0b1320; }
 .hero:before { inset:0; background:radial-gradient(ellipse at 85% 35%,rgba(34,88,151,.23),transparent 60%); filter:none; }
 .hero-layout { grid-template-columns:1fr 1fr; gap:48px; }
-.hero h1 { font-family:Inter,system-ui,sans-serif; font-size:clamp(42px,4.6vw,64px); font-weight:650; line-height:1.08; letter-spacing:-.045em; color:#f1f5fa; background:none; -webkit-text-fill-color:initial; }
+.hero h1 { font-family:Inter,system-ui,sans-serif; font-size:clamp(40px,4.8vw,68px); font-weight:650; line-height:1.05; letter-spacing:-.045em; color:#f1f5fa; background:none; -webkit-text-fill-color:initial; }
 .hero-lede { font-size:17px; line-height:1.7; max-width:470px; }
 .hero-actions { gap:12px; }
 .hero-note { font-size:12px; line-height:1.7; max-width:440px; }
-.product-frame { border-radius:14px; background:#111e2e; box-shadow:0 24px 65px #0005; }
+.product-frame { border-radius:12px; background:#111e2e; box-shadow:0 24px 65px #0005; }
 .frame-top { height:48px; font-size:11px; background:#142337; }
 .frame-body { grid-template-columns:100px 1fr; min-height:370px; }
 .frame-body aside { font-size:10px; border-color:#28394e; }
@@ -37,9 +37,9 @@
 .tech-heading .section-subtitle { color:#56657b; font-size:17px; line-height:1.65; }
 .tech-grid { display:block; }
 .tech-cards { grid-template-columns:repeat(3,1fr); gap:20px; }
-.tech-card { padding:28px; border:1px solid #dce3ed; border-radius:14px; background:white; }
+.tech-card { padding:28px; border:1px solid #dce3ed; border-radius:12px; background:white; transition:transform 180ms ease,border-color 180ms ease; }
 .tech-card:hover { transform:translateY(-3px); border-color:#9db9e7; }
-.tech-card>span { position:static; display:grid; place-items:center; width:38px; height:38px; border-radius:10px; color:#2868c8; background:#edf3fc; margin-bottom:26px; }
+.tech-card>span { position:static; display:grid; place-items:center; width:38px; height:38px; border-radius:8px; color:#2868c8; background:#edf3fc; margin-bottom:26px; }
 .tech-card h3 { font-size:21px; letter-spacing:-.025em; }
 .tech-card p { color:#59687b; font-size:15px; line-height:1.65; }
 .product-section { padding:90px 0; }

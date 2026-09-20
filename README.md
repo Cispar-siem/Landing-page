@@ -37,6 +37,12 @@ This repository is the public landing page hosted on GitHub Pages.
 # Install dependencies
 npm install
 
+# Run linting
+npm run lint
+
+# Run platform detection tests
+npm test
+
 # Start dev server (hot reload)
 npm run dev
 
@@ -57,27 +63,22 @@ The dev server runs at `http://localhost:5173`.
 Landing-page/
 ├── .github/
 │   └── workflows/
-│       └── deploy.yml          # GitHub Actions CI/CD
+│       └── deploy.yml          # GitHub Actions CI/CD (Pages artifact deployment)
+├── docs/                       # Implementation status, architecture & plans
+├── public/
+│   └── releases.json           # Catalog of downloadable releases
 ├── src/
-│   ├── components/
-│   │   ├── layout/
-│   │   │   ├── Header.tsx      # Sticky nav with mobile menu
-│   │   │   └── Footer.tsx      # Footer with link columns
-│   │   └── sections/
-│   │       ├── Hero.tsx        # Full-screen hero with animated orbs
-│   │       ├── TrustSignals.tsx # Compliance badges + key metrics
-│   │       ├── HowItWorks.tsx  # Interactive L1/L2/L3 explainer
-│   │       ├── Features.tsx    # Six capabilities grid
-│   │       ├── Terminal.tsx    # Animated SOC demo terminal
-│   │       ├── Stats.tsx       # Count-up metrics section
-│   │       └── CallToAction.tsx # Email capture + early access
-│   ├── hooks/
-│   │   └── useIntersectionObserver.ts  # Scroll-triggered visibility
-│   ├── types/
-│   │   └── index.ts            # Shared TypeScript interfaces
-│   ├── App.tsx                 # Root component
+│   ├── components/             # Reusable UI, layout and auth components
+│   ├── context/                # React context (AuthContext, etc.)
+│   ├── hooks/                  # Custom React hooks
+│   ├── lib/                    # Supabase client, releases client, etc.
+│   ├── pages/                  # Page-level components
+│   ├── types/                  # Shared TypeScript interfaces
+│   ├── App.tsx                 # Root router (HashRouter)
 │   ├── main.tsx                # Entry point
-│   └── index.css               # Tailwind + custom component classes
+│   └── index.css               # Base Tailwind styles
+├── tests/
+│   └── platform.test.mjs       # Platform detection tests
 ├── index.html
 ├── vite.config.ts              # base: '/Landing-page/' for GH Pages
 ├── tailwind.config.js
@@ -92,14 +93,15 @@ Landing-page/
 Deployment is fully automated via GitHub Actions on every push to `main`.
 
 **How it works:**
-1. GitHub Actions builds the project with `npm run build`
-2. The `dist/` folder is deployed to the `gh-pages` branch
-3. GitHub Pages serves from that branch
+1. GitHub Actions runs `npm run lint` and `npm test`
+2. It compiles the bundle with `npm run build`
+3. The `dist/` folder is uploaded as a GitHub Pages artifact (`actions/upload-pages-artifact@v3`)
+4. GitHub Pages deploys the artifact directly to production (`actions/deploy-pages@v4`)
 
 **Manual trigger:** Go to Actions → Deploy to GitHub Pages → Run workflow.
 
 **GitHub Pages setup (one time):**
-- Settings → Pages → Source: Deploy from branch `gh-pages`
+- Repository Settings → Pages → Build and deployment → Source: **GitHub Actions**
 
 ---
 

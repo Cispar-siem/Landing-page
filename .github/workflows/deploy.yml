@@ -32,12 +32,20 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm test
+
       - name: Build
         run: npm run build
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
           VITE_LICENSE_SERVER_URL: ${{ secrets.VITE_LICENSE_SERVER_URL }}
+          VITE_RELEASE_MANIFEST_URL: ${{ vars.VITE_RELEASE_MANIFEST_URL || secrets.VITE_RELEASE_MANIFEST_URL || '/Landing-page/releases.json' }}
+          VITE_WHATSAPP_NUMBER: ${{ secrets.VITE_WHATSAPP_NUMBER || vars.VITE_WHATSAPP_NUMBER }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

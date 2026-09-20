@@ -1,25 +1,42 @@
+import './index.css';
+import './pages.css';
+import './hybrid.css';
+import './tech.css';
+import './contact.css';
+import './marketing.css';
 import { HashRouter, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
-import { AuthModal } from './components/auth/AuthModal';
 import { Footer } from './components/layout/Footer';
 import { Header } from './components/layout/Header';
 import { Hero } from './components/sections/Hero';
-import { ProductOverview } from './components/sections/ProductOverview';
-import { TechnologyShowcase } from './components/sections/TechnologyShowcase';
-import { I18nProvider } from './i18n/I18nContext';
+import { IncidentNarrative } from './components/sections/IncidentNarrative';
+import { SecurityNotes } from './components/sections/SecurityNotes';
+import { InstallationSteps } from './components/sections/InstallationSteps';
+import { CompatibilityRequirements } from './components/sections/CompatibilityRequirements';
+import { PricingSection } from './components/sections/PricingSection';
 import { Faq } from './components/sections/Faq';
 import { WhatsAppContact } from './components/layout/WhatsAppContact';
 import { DownloadPage } from './pages/DownloadPage';
 import { PricingPage } from './pages/PricingPage';
 import { ContactPage } from './pages/ContactPage';
 import { AuthPage } from './pages/AuthPage';
+import { I18nProvider } from './i18n/I18nContext';
 
 function SiteLayout({ children }: { readonly children: React.ReactNode }): React.ReactElement {
-  return <><Header /><main>{children}</main><Footer /><AuthModal /></>;
+  return <><Header /><main>{children}</main><Footer /></>;
 }
 
 function LandingPage(): React.ReactElement {
-  return <SiteLayout><Hero /><TechnologyShowcase /><ProductOverview /><Faq /><WhatsAppContact /></SiteLayout>;
+  return <SiteLayout>
+    <Hero />
+    <IncidentNarrative />
+    <SecurityNotes />
+    <InstallationSteps />
+    <CompatibilityRequirements />
+    <PricingSection />
+    <Faq />
+    <WhatsAppContact />
+  </SiteLayout>;
 }
 
 export function App(): React.ReactElement {

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getSupabase } from '../../lib/supabase';
 import { useAuth } from '../../context/AuthContext';
@@ -7,11 +7,12 @@ const LICENSE_SERVER_URL =
   (import.meta.env.VITE_LICENSE_SERVER_URL as string | undefined) ??
   'https://cispar-license-server.fly.dev';
 
-function getDeviceCode(): string | null {
+function getUserCode(): string | null {
   const hash = window.location.hash;
   const queryStart = hash.indexOf('?');
   if (queryStart === -1) return null;
-  return new URLSearchParams(hash.slice(queryStart)).get('code');
+  const value = new URLSearchParams(hash.slice(queryStart)).get('user_code');
+  return value && /^[A-F0-9]{10}$/.test(value) ? value : null;
 }
 
 function GoogleIcon(): React.ReactElement {
@@ -34,7 +35,7 @@ function Spinner(): React.ReactElement {
   );
 }
 
-type AuthStep = 'login' | 'approving' | 'success' | 'error';
+type AuthStep = 'login' | 'confirm_device' | 'approving' | 'success' | 'error';
 
 /**
  * Login modal with email/password and Google Sign-In.
@@ -42,7 +43,7 @@ type AuthStep = 'login' | 'approving' | 'success' | 'error';
  * Rendered at the app root level — controlled by AuthContext.
  */
 export function AuthModal(): React.ReactElement {
-  const { isLoginOpen, closeLogin } = useAuth();
+  const { isLoginOpen, closeLogin, session } = useAuth();
   const [step, setStep] = useState<AuthStep>('login');
   const [error, setError] = useState('');
   const [email, setEmail] = useState('');
@@ -50,16 +51,31 @@ export function AuthModal(): React.ReactElement {
   const [emailLoading, setEmailLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
 
-  const deviceCode = getDeviceCode();
+  const userCode = getUserCode();
 
-  async function approveDevice(accessToken: string): Promise<void> {
-    if (!deviceCode) { setStep('success'); return; }
+  useEffect(() => {
+    if (!isLoginOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeLogin();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isLoginOpen, closeLogin]);
+
+  useEffect(() => {
+    if (userCode && session) {
+      setStep('confirm_device');
+    }
+  }, [userCode, session]);
+
+  const approveDevice = useCallback(async (accessToken: string): Promise<void> => {
+    if (!userCode) { setStep('success'); return; }
     setStep('approving');
     try {
       const res = await fetch(`${LICENSE_SERVER_URL}/device/approve`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ deviceCode, supabaseToken: accessToken }),
+        body: JSON.stringify({ userCode, supabaseToken: accessToken }),
       });
       if (res.ok) {
         setStep('success');
@@ -72,16 +88,22 @@ export function AuthModal(): React.ReactElement {
       setError('Could not connect to license server. Try again.');
       setStep('error');
     }
-  }
+  }, [userCode]);
 
   useEffect(() => {
     const supabase = getSupabase();
     if (!supabase) return;
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event === 'SIGNED_IN' && session) await approveDevice(session.access_token);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, newSession) => {
+      if (event === 'SIGNED_IN' && newSession) {
+        if (userCode) {
+          setStep('confirm_device');
+        } else {
+          setStep('success');
+        }
+      }
     });
     return () => subscription.unsubscribe();
-  }, []);
+  }, [userCode]);
 
   async function handleEmailLogin(e: React.FormEvent): Promise<void> {
     e.preventDefault();
@@ -166,7 +188,7 @@ export function AuthModal(): React.ReactElement {
                 </button>
               </div>
 
-              {deviceCode && step === 'login' && (
+              {userCode && step === 'login' && (
                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium mb-4 w-fit"
                   style={{ background: 'rgba(59,130,246,0.12)', border: '1px solid rgba(59,130,246,0.3)', color: '#60a5fa' }}>
                   <svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -174,6 +196,47 @@ export function AuthModal(): React.ReactElement {
                     <path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
                   </svg>
                   CLI Authorization
+                </div>
+              )}
+
+              {step === 'confirm_device' && (
+                <div className="flex flex-col items-center gap-4 py-4 text-center">
+                  <div className="w-12 h-12 rounded-full flex items-center justify-center"
+                    style={{ background: 'rgba(59,130,246,0.15)', border: '1px solid rgba(59,130,246,0.3)' }}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+                      <rect x="2" y="3" width="20" height="14" rx="2" />
+                      <line x1="8" y1="21" x2="16" y2="21" />
+                      <line x1="12" y1="17" x2="12" y2="21" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-text-primary text-base">Autorizar terminal</h3>
+                    <p className="text-xs text-text-secondary mt-1">
+                      Se ha solicitado vincular el equipo con código:
+                    </p>
+                    <code className="inline-block px-3 py-1.5 rounded-lg bg-surface border border-line text-sm font-mono text-accent-blue font-bold my-2">
+                      {userCode}
+                    </code>
+                    <p className="text-xs text-text-secondary">
+                      Cuenta: <span className="text-text-primary font-medium">{session?.user.email}</span>
+                    </p>
+                  </div>
+                  <div className="flex gap-2 w-full mt-2">
+                    <button
+                      type="button"
+                      onClick={() => { if (session?.access_token) void approveDevice(session.access_token); }}
+                      className="btn-primary flex-1 justify-center"
+                    >
+                      Autorizar este equipo
+                    </button>
+                    <button
+                      type="button"
+                      onClick={closeLogin}
+                      className="btn-secondary px-4"
+                    >
+                      Cancelar
+                    </button>
+                  </div>
                 </div>
               )}
 
@@ -193,8 +256,8 @@ export function AuthModal(): React.ReactElement {
                     </svg>
                   </div>
                   <div>
-                    <p className="font-bold text-text-primary">{deviceCode ? 'Terminal authorized!' : 'Signed in!'}</p>
-                    {deviceCode && <p className="text-xs text-text-secondary mt-1">You can close this window.</p>}
+                    <p className="font-bold text-text-primary">{userCode ? 'Device authorized!' : 'Signed in!'}</p>
+                    {userCode && <p className="text-xs text-text-secondary mt-1">You can close this window.</p>}
                   </div>
                 </div>
               )}
