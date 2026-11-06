@@ -1,59 +1,50 @@
 # Contexto persistente del proyecto
 
-Actualizado: 20 de septiembre de 2026
-Modo operativo: startup en producción
+Actualizado: 29 de octubre de 2026
+Modo operativo: producto en desarrollo; piloto en preparación
 
 ## Qué es este repositorio
 
-Este repositorio contiene el landing React/Vite de CISPAR. Presenta el producto, permite conocer incidentes de seguridad, muestra precios y distribuye enlaces a instaladores publicados.
+Este repositorio contiene el landing React/Vite de CISPAR Security. Presenta el producto, el estado de disponibilidad y el acceso de contacto para el piloto. Solo enlazará instaladores cuando existan paquetes publicados y validados.
 
-## Productos relacionados
+## Producto
 
-### CISPAR Agent
-
-Agente de coding descargable, inspirado en el flujo de herramientas como Claude Code. Es un producto comercial de producción que debe seguir el flujo “descargar, abrir, iniciar sesión en navegador y usar”. Su consumo se controla desde el backend CISPAR.
-
-### CISPAR SIEM
-
-Producto distinto, con gateway, Docker y requisitos operativos más pesados. Sus documentos o instaladores no deben mezclarse con el flujo simple del Agent sin una decisión explícita.
+CISPAR Security es una plataforma SaaS de operaciones de ciberseguridad para visibilidad de endpoints, detecciones verificables, investigación centralizada y respuesta controlada. El MVP propuesto prioriza Windows 11 y Ubuntu Server LTS. El plan técnico describe cómo construir el producto; no significa que las capacidades o los instaladores ya estén disponibles. La decisión vigente D-006 supersede descripciones históricas de coding agent.
 
 ## Arquitectura de trabajo
 
 ```text
 Landing público: React/Vite
-Auth e identidad: Supabase Auth
-Datos de cuenta: Supabase Postgres
-API de licencia, suscripción y requests: backend CISPAR
-Proveedor de modelos: llamado desde backend con credenciales privadas
-Instaladores: releases por plataforma
-Pagos: Stripe candidato inicial, pendiente de configuración comercial
+Producto objetivo: plataforma SaaS de operaciones de ciberseguridad
+Agente endpoint propuesto: Windows 11 y Ubuntu Server LTS
+Flujo objetivo: telemetría → detección explicable → investigación → respuesta autorizada
+Distribución: instaladores firmados solo después de validación y publicación
 ```
 
-## Reglas de acceso
+El plan en `/home/axel/Downloads/plan.md` y el documento técnico `/home/axel/Downloads/claude.md` son planes de implementación de CISPAR Security. No convierten el producto en un agente de programación. La definición vigente del producto está registrada en `docs/DECISIONS.md` (D-006).
 
-- El landing público no exige login.
-- Login se solicita para activar una instalación, usar Agent, comprar o administrar la cuenta.
-- La suscripción no se valida solo en la UI; cada request protegida pasa por backend.
-- El archivo descargado no contiene claves de proveedores.
-- El usuario final no debe instalar Docker, Node, Python ni editar configuración para usar el flujo base.
+## Reglas de comunicación
+
+- Presentar Windows 11 y Ubuntu Server LTS como alcance inicial propuesto, no como disponibilidad descargable.
+- No afirmar SOC 24/7, cobertura EDR madura, resultados en vivo o precios publicados sin evidencia y decisión aprobada.
+- Mantener el landing público y sin login obligatorio.
+- No ofrecer instaladores placeholder ni paquetes de otros repositorios.
 
 ## Estado técnico confirmado
 
 - Landing: `/home/axel/Landing-page`.
-- License server: `/home/axel/cispar-ia-backend/cispar-license-server`.
-- Cliente terminal: `/home/axel/cispar-terminal` y `/home/axel/cispar-terminal-claude`.
-- El license server actual tiene device flow, customers, JWT y Supabase, pero todavía necesita entitlement, Stripe, metering, revocación robusta y conexión con el cliente Agent.
-- Los clientes terminal revisados todavía usan API keys del usuario y no están sujetos a la suscripción CISPAR.
+- Los repositorios de licencias y coding existentes no acreditan capacidades del producto CISPAR Security.
+- Cliente terminal: `/home/axel/cispar-terminal` y `/home/axel/cispar-terminal-claude`; estos repositorios de coding no definen CISPAR Security.
 
-## Prioridad actual de producción
+## Prioridad actual de producto
 
-1. Separar claramente Agent de SIEM.
-2. Definir el repo canónico de backend y cliente.
-3. Endurecer device flow y sesión antes de dar acceso a clientes.
-4. Conectar el cliente a la API CISPAR con observabilidad y límites.
-5. Activar entitlement, créditos, concurrencia y billing reales.
-6. Publicar releases firmadas y soporte de actualización/rollback.
-7. Mantener el landing y la sección editorial con contenido verificable.
+1. Validar alcance de arquitectura y detección por sistema operativo.
+2. Construir identidad, telemetría, ingesta y aislamiento entre clientes.
+3. Probar reglas, alertas, evidencia e investigación con escenarios reproducibles.
+4. Implementar respuestas autorizadas, límites y auditoría.
+5. Preparar piloto y releases firmadas solo después de validar la operación.
+6. Definir modelo comercial y cualquier servicio SOC administrado.
+7. Mantener la web alineada con capacidades verificadas.
 
 ## Estándar de producción
 

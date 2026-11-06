@@ -1,0 +1,181 @@
+/* ==========================================================================
+   CISPAR — Design Tokens
+   Intentional, opinionated values. No utility soup.
+   ========================================================================== */
+
+:root {
+  /* ── Color ── */
+  /* Core surfaces */
+  --color-bg: #05080c;
+  --color-bg-elevated: #0a0f16;
+  --color-surface: #0d141d;
+  --color-surface-hover: #121c2a;
+  --color-surface-pressed: #0e1722;
+
+  /* Borders */
+  --color-border: #1a2636;
+  --color-border-hover: #233348;
+  --color-border-strong: #2d4059;
+
+  /* Text */
+  --color-fg: #f1f5fb;
+  --color-fg-muted: #8b9ab3;
+  --color-fg-subtle: #5d6d7e;
+  --color-fg-inverse: #05080c;
+
+  /* Brand - intentional, not generic blue */
+  --color-brand: #2d7ff9;
+  --color-brand-hover: #1a6fe8;
+  --color-brand-soft: rgba(45, 127, 249, 0.12);
+  --color-brand-glow: rgba(45, 127, 249, 0.28);
+
+  /* Accent - purposeful green, not "success" */
+  --color-accent: #0ecb81;
+  --color-accent-hover: #0db876;
+  --color-accent-soft: rgba(14, 203, 129, 0.12);
+  --color-accent-glow: rgba(14, 203, 129, 0.28);
+
+  /* Semantic - used sparingly, with intent */
+  --color-warning: #f5b800;
+  --color-danger: #f04438;
+  --color-danger-soft: rgba(240, 68, 56, 0.12);
+
+  /* Gradients - crafted, not preset */
+  --gradient-brand: linear-gradient(135deg, #2d7ff9 0%, #0ecb81 100%);
+  --gradient-brand-strong: linear-gradient(135deg, #1e6fd8 0%, #0db876 100%);
+  --gradient-subtle: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 100%);
+  --gradient-hero: radial-gradient(ellipse 70% 50% at 50% 30%, rgba(45,127,249,0.07) 0%, transparent 60%),
+                   radial-gradient(ellipse 50% 40% at 85% 15%, rgba(14,203,129,0.04) 0%, transparent 50%);
+  --gradient-card: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+
+  /* ── Typography ── */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+  --font-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+
+  /* Type scale - deliberate, not mathematical */
+  --text-xs: 0.7rem;      /* 11.2px */
+  --text-sm: 0.8125rem;   /* 13px */
+  --text-base: 0.9375rem; /* 15px */
+  --text-md: 1rem;        /* 16px */
+  --text-lg: 1.125rem;    /* 18px */
+  --text-xl: 1.375rem;    /* 22px */
+  --text-2xl: 1.75rem;    /* 28px */
+  --text-3xl: 2.25rem;    /* 36px */
+  --text-4xl: 3rem;       /* 48px */
+  --text-5xl: 4rem;       /* 64px */
+  --text-6xl: 5.5rem;     /* 88px */
+
+  /* Line heights - tight for headlines, relaxed for body */
+  --leading-tight: 1.05;
+  --leading-snug: 1.25;
+  --leading-normal: 1.55;
+  --leading-relaxed: 1.7;
+
+  /* Font weights */
+  --weight-normal: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --weight-extrabold: 800;
+
+  /* ── Spacing ── */
+  /* Base unit: 4px. Scale is deliberate, not linear. */
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.25rem;   /* 20px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-7: 1.75rem;   /* 28px */
+  --space-8: 2rem;      /* 32px */
+  --space-9: 2.5rem;    /* 40px */
+  --space-10: 3rem;     /* 48px */
+  --space-11: 3.5rem;   /* 56px */
+  --space-12: 4rem;     /* 64px */
+  --space-14: 5rem;     /* 80px */
+  --space-16: 6rem;     /* 96px */
+  --space-20: 8rem;     /* 128px */
+
+  /* ── Radius ── */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+  --radius-2xl: 24px;
+  --radius-pill: 9999px;
+
+  /* ── Shadows ── */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.5);
+  --shadow-lg: 0 16px 32px rgba(0,0,0,0.55);
+  --shadow-xl: 0 28px 64px rgba(0,0,0,0.6);
+  --shadow-brand: 0 10px 36px var(--color-brand-glow);
+  --shadow-brand-strong: 0 16px 48px var(--color-brand-glow);
+  --shadow-accent: 0 10px 36px var(--color-accent-glow);
+  --shadow-inner: inset 0 1px 0 rgba(255,255,255,0.03);
+
+  /* ── Transitions ── */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --duration-fast: 120ms;
+  --duration-base: 180ms;
+  --duration-slow: 280ms;
+  --duration-slower: 400ms;
+
+  /* ── Layout ── */
+  --container-max: 1200px;
+  --container-padding: 1.5rem;
+  --header-height: 72px;
+  --header-height-mobile: 64px;
+
+  /* ── Z-index ── */
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-fixed: 300;
+  --z-modal: 400;
+  --z-toast: 500;
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0.01ms;
+    --duration-base: 0.01ms;
+    --duration-slow: 0.01ms;
+    --duration-slower: 0.01ms;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── High contrast ── */
+@media (prefers-contrast: more) {
+  :root {
+    --color-border: #3a4d66;
+    --color-fg-muted: #a8b8cc;
+  }
+}
+
+/* ── Focus ── */
+:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+/* ── Selection ── */
+::selection {
+  background: var(--color-brand);
+  color: white;
+}
+
+/* ── Scrollbar ── */
+* { scrollbar-width: thin; scrollbar-color: var(--color-border) transparent; }
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 4px; }
+*::-webkit-scrollbar-thumb:hover { background: var(--color-border-hover); }

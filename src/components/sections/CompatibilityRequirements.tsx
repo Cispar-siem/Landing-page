@@ -15,9 +15,9 @@ export function CompatibilityRequirements(): React.ReactElement {
   return (
     <section className="compatibility-requirements section">
       <div className="section-container">
-        <h2 className="section-title">{t('compatibility.title')}</h2>
+        <h2 className="section-title" data-reveal>{t('compatibility.title')}</h2>
         <p className="section-subtitle">{t('compatibility.body')}</p>
-        <div className="requirements-grid">
+        <div className="requirements-grid" data-reveal>
           {Array.from(osRequirementMap.entries()).map(([os, req]) => {
             const osLabel = { macos: 'macOS', windows: 'Windows', linux: 'Linux' }[os];
             return (

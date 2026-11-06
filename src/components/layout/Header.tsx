@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import logo from '../assets/logo.png';
 import { useI18n } from '../../i18n/I18nContext';
-import { DownloadButton } from './DownloadButton';
+import { LogoWithWordmark } from '../ui/Logo';
 
 const links = [
   { key: 'nav.product', to: '/' },
@@ -18,11 +17,11 @@ export function Header(): React.ReactElement {
   return (
     <header className="site-header">
       <nav className="section-container nav-shell" aria-label={t('nav.main')}>
-        <Link to="/" className="brand" onClick={() => setOpen(false)}>
-          <img className="brand-logo" src={logo} alt="CISPAR" />
-          <span>CISPAR</span>
+        <Link to="/" className="brand" onClick={() => setOpen(false)} aria-label="CISPAR - Inicio">
+          <LogoWithWordmark size="md" variant="default" />
         </Link>
         <button
+          type="button"
           className="nav-toggle"
           onClick={() => setOpen(!open)}
           aria-expanded={open}
@@ -48,9 +47,7 @@ export function Header(): React.ReactElement {
               <option value="es">ES</option>
               <option value="en">EN</option>
             </select>
-            <div onClick={() => setOpen(false)}>
-              <DownloadButton className="btn-primary btn-small" />
-            </div>
+            <Link to="/contact" className="btn-primary btn-small" onClick={() => setOpen(false)}>{t('nav.downloadCta')}</Link>
           </div>
         </div>
       </nav>

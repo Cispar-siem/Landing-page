@@ -12,8 +12,8 @@ Antes de modificar este repositorio, leer en este orden:
 ## Reglas del proyecto
 
 - Preservar cambios existentes y revisar `git status` antes de editar.
-- CISPAR Agent y CISPAR SIEM son productos relacionados, pero no deben mezclarse en el landing ni en el instalador del agente.
-- El flujo del usuario debe ser: descargar, abrir, login en navegador y usar. El usuario final no instala Docker, Node, Python, modelos ni configura API keys para el flujo base.
+- CISPAR Security es la plataforma SaaS de operaciones de ciberseguridad/SOC descrita en D-006. No describir CISPAR como agente de programación. No mezclar binarios de repositorios ajenos con su instalador.
+- No afirmar que el flujo de descarga existe mientras no haya paquetes CISPAR Security publicados y validados. El agente final no debe exigir que el cliente instale Docker, Node o Python.
 - El landing es público. El login solo aparece para activar una instalación, usar el agente, comprar o administrar la cuenta.
 - El backend es la autoridad para suscripción, entitlement, límites, dispositivos y consumo. El frontend y el binario no autorizan por sí mismos.
 - No inventar clientes, incidentes, métricas, certificaciones, precios, integraciones ni fuentes de noticias.

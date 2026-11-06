@@ -1,6 +1,6 @@
-# CISPAR — Autonomous SOC AI Agent
+# CISPAR Security — landing público
 
-> Detects, investigates, and contains threats automatically. L1, L2, and L3. 24/7.
+> Plataforma de operaciones de ciberseguridad en desarrollo; piloto en preparación.
 
 [![Verify landing](https://github.com/Cispar-siem/Landing-page/actions/workflows/deploy.yml/badge.svg)](https://github.com/Cispar-siem/Landing-page/actions/workflows/deploy.yml)
 
@@ -8,11 +8,7 @@
 
 ## What is CISPAR?
 
-CISPAR is an autonomous Security Operations Center (SOC) AI agent that replaces L1, L2, and L3 human analyst tiers. It operates around the clock to:
-
-- **L1 — Triage**: Monitor systems, parse events, enrich IOCs, classify threats against MITRE ATT&CK
-- **L2 — Response**: Collect forensic evidence, execute playbooks, contain threats autonomously
-- **L3 — Hunting**: Proactively search for TTPs, identify detection gaps, apply system hardening
+CISPAR busca dar visibilidad de endpoints, detecciones con evidencia, investigación y respuestas autorizadas. La web presenta el alcance previsto y un Quick Scan de fuentes públicas del dominio. La disponibilidad de cada capacidad requiere validación; no hay paquetes del agente Security publicados.
 
 This repository is the public landing page deployed through Vercel.
 
@@ -54,6 +50,8 @@ npm run preview
 ```
 
 The dev server runs at `http://localhost:5173`.
+
+Para el laboratorio S3 local, ejecuta `./local-aws/start.sh` y abre `http://127.0.0.1:5173/#/download`. Los artefactos Moto actuales son fixtures de texto. El [plan de paquetes nativos](docs/NATIVE-PACKAGES-PLAN.md) cubre Ubuntu, Arch, macOS y Windows, junto con sus criterios de aceptación.
 
 ---
 

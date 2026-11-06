@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useI18n } from '../../i18n/I18nContext';
+import { LogoWithWordmark } from '../ui/Logo';
 
 export function Footer(): React.ReactElement {
   const { t } = useI18n();
@@ -7,7 +8,7 @@ export function Footer(): React.ReactElement {
     <footer className="site-footer">
       <div className="section-container footer-shell">
         <div>
-          <p className="footer-brand">CISPAR</p>
+          <LogoWithWordmark size="md" variant="inverse" className="mb-3" />
           <p className="footer-copy">{t('footer.tagline')}</p>
         </div>
         <div className="footer-links">

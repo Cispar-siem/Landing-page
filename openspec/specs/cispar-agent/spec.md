@@ -1,91 +1,41 @@
-# CISPAR Agent
+# CISPAR Security
 
-Estado: especificación activa para producción
-Producto: agente de coding descargable de CISPAR
+Estado: especificación activa de producto
+Producto: plataforma SaaS de operaciones de ciberseguridad
 
 ## Propósito
 
-CISPAR Agent permite que una persona trabaje con un asistente de coding desde un cliente instalado. El usuario descarga una aplicación, inicia sesión desde el navegador y usa el servicio sin instalar Docker, Node, Python, modelos locales ni API keys.
+CISPAR Security busca ayudar a equipos de TI con recursos limitados a tener visibilidad de sus endpoints, identificar señales de riesgo, revisar detecciones con evidencia y organizar respuestas controladas. El MVP propuesto prioriza Windows 11 y Ubuntu Server LTS. El PDF de negocio y el plan técnico de CISPAR Security son la referencia de alcance; el plan describe trabajo futuro, no funciones ya publicadas.
 
-## Límites del producto en producción
+CISPAR no es un agente de programación. Las descripciones de coding agent que aparecen en documentación histórica quedan sustituidas por la decisión D-006 de `docs/DECISIONS.md`.
 
-- No es el instalador del SIEM.
-- No requiere Docker Desktop, Docker Engine o un gateway local para el flujo base.
-- No reutiliza cookies, sesiones ni suscripciones de Claude, Cursor, Antigravity u otros productos.
-- El número de proveedores se decide por costo, margen, contrato y soporte; cada proveedor habilitado debe tener integración, límites y observabilidad de producción.
-- No obliga a iniciar sesión para leer el landing.
+## Estado y límites
 
-## Requisitos
+- El producto y el piloto están en desarrollo.
+- El landing debe distinguir capacidades propuestas de capacidades disponibles.
+- No afirmar servicio SOC 24/7, cobertura equivalente a un EDR maduro, capacidad de respuesta no validada ni disponibilidad de agentes/instaladores sin evidencia real.
+- Las respuestas de alto impacto requieren aprobación humana en el alcance propuesto.
+- Precios, alcance comercial, SLA, servicio administrado y compatibilidad se mantienen pendientes hasta validación.
+- No mezclar binarios placeholder ni instaladores de otros productos con CISPAR Security.
 
-### Landing público
+## Landing público
 
-- MUST permitir leer producto, requisitos, precios, privacidad e incidentes sin login.
-- MUST mostrar un CTA principal de descarga o contratación, según la oferta aprobada.
-- MUST mostrar una sección editorial de incidentes o noticias solo con fuente y fecha verificables.
-- MUST explicar qué problema ocurrió, qué señal existía y cómo CISPAR ayuda; no atribuir causalidad falsa a una empresa real.
-- MUST mostrar errores y estados de descarga sin activar enlaces para releases inválidas o no publicadas.
+- Debe explicar en lenguaje directo quién usa CISPAR, qué riesgos ayuda a investigar y cómo pasa de una señal a evidencia y decisión.
+- El CTA principal debe llevar a una acción funcional, como contacto para piloto.
+- Las vistas ilustrativas deben identificarse como conceptuales y no usar datos o métricas que aparenten provenir de clientes.
+- Los enlaces a escaneo público solo se ofrecen cuando su API está configurada y disponible para el entorno desplegado.
+- Las noticias o incidentes editoriales necesitan fuente y fecha verificables.
+- El visitante puede leer el landing sin login.
 
-### Instalación
+## Agente, detección e investigación
 
-- MUST ofrecer un paquete por plataforma y arquitectura que corresponda a un artefacto real.
-- MUST abrir el navegador del sistema cuando la aplicación necesita login.
-- MUST completar la activación sin que el usuario copie API keys ni edite archivos `.env`.
-- MUST informar requisitos reales y no presentar Docker como requisito del Agent.
-- MUST guardar la sesión local en el almacén seguro disponible del sistema operativo.
+- El alcance inicial propuesto es telemetría seleccionada de Windows 11 y Ubuntu Server LTS.
+- Las detecciones deben ser reproducibles, explicables y vinculadas con evidencia.
+- Alertas e incidentes deben permitir entender qué ocurrió, en qué endpoint y por qué se generaron.
+- El diseño de respuesta debe limitar las acciones permitidas, dejar auditoría y exigir aprobación humana para impactos mayores.
+- Cada sistema operativo y capacidad requiere validación técnica antes de anunciarse como disponible.
 
-### Device flow
+## Distribución
 
-- MUST usar el device flow definido en `docs/AUTH-DECISION.md` en producción.
-- MUST usar secretos de dispositivo con entropía suficiente, expiración, intentos limitados y uso único.
-- MUST mostrar qué instalación se está autorizando y pedir confirmación explícita.
-- MUST devolver una sesión revocable para una instalación, no un JWT permanente de 30 días sin revocación.
-- MUST invalidar el código después del canje o expiración.
-
-### Suscripción y entitlement
-
-- MUST mantener identidad en Supabase Auth y permisos comerciales en el backend.
-- MUST activar o desactivar el entitlement desde eventos verificados del proveedor de pagos.
-- MUST permitir login para administrar la cuenta aunque el entitlement esté vencido.
-- MUST bloquear requests de Agent cuando no existe entitlement válido, crédito disponible o capacidad concurrente.
-- MUST hacer idempotentes checkout, autorización, registro de instalación, revocación y procesamiento de webhooks.
-
-### Requests al modelo
-
-- MUST enviar las requests al proveedor desde el backend CISPAR.
-- MUST mantener las claves de proveedores fuera del frontend y del binario.
-- MUST verificar sesión, entitlement, plan, cuota y concurrencia antes de llamar al proveedor.
-- MUST registrar uso final y costo estimado por request, sin guardar contenido sensible más tiempo del necesario.
-- MUST devolver un error accionable cuando falta crédito, hay límite de concurrencia o el pago está pendiente.
-
-### Planes y límites
-
-El modelo recomendado es una suscripción con créditos mensuales y concurrencia máxima. El precio y los valores todavía son decisiones abiertas.
-
-Un plan puede definir:
-
-- `monthly_credits`
-- `max_concurrent_requests`
-- `allowed_models`
-- `max_installations`
-- `retention_days`
-
-El sistema MUST reservar presupuesto antes de llamar al modelo y reconciliarlo con el consumo real después. No usar únicamente el número de mensajes como medida de costo.
-
-## Criterios de aceptación para producción
-
-- Una persona nueva puede entrar al landing sin login.
-- Puede descargar un instalador real y abrirlo sin Docker ni API key.
-- `cispar login` abre el navegador y autoriza solo esa instalación.
-- Un usuario sin suscripción puede iniciar sesión, pero una request de Agent es rechazada con una explicación clara.
-- Un usuario activo puede hacer requests hasta su límite.
-- Dos requests concurrentes no pueden superar el límite del plan por una carrera de DB.
-- Una suscripción cancelada deja de habilitar nuevas requests según la política aprobada.
-- Un webhook repetido no duplica entitlement ni crédito.
-- Una instalación revocada no puede continuar usando la API.
-- Un visitante puede leer un incidente con fuente, fecha y CTA sin crear una cuenta.
-- Hay staging separado de producción y una prueba end-to-end antes de cada release.
-- Hay backups, restauración comprobada, alertas, logs correlacionados y runbook de incidentes.
-- Las migraciones son versionadas y reversibles o tienen procedimiento de recuperación probado.
-- Hay política publicada para pagos fallidos, reembolsos, cancelaciones, borrado de cuenta y soporte.
-- Hay releases firmadas, rollback documentado y una instalación limpia verificada por plataforma.
-- Las credenciales privilegiadas, claves de modelos y secretos de pagos están fuera del frontend, binario y repositorio.
+- Solo publicar descargas para artefactos reales, validados, firmados y con checksum verificable.
+- Si no hay instaladores, mostrarlo con claridad y ofrecer contacto para el piloto; no simular un flujo de instalación.
