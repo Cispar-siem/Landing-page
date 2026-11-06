@@ -16,11 +16,8 @@ export type Release = {
 };
 
 export const releaseCatalog: readonly Release[] = [
-  { id: 'mac-arm64', os: 'macos', arch: 'arm64', label: 'macOS · Apple Silicon', requirements: 'macOS 12 o posterior · conexión a internet', available: false },
-  { id: 'mac-x64', os: 'macos', arch: 'x64', label: 'macOS · Intel', requirements: 'macOS 12 o posterior · conexión a internet', available: false },
-  { id: 'windows-x64', os: 'windows', arch: 'x64', label: 'Windows · x64', requirements: 'Windows 10 o posterior · conexión a internet', available: false },
-  { id: 'linux-x64', os: 'linux', arch: 'x64', label: 'Linux · x64', requirements: 'Distribución Linux compatible · conexión a internet', available: false },
-  { id: 'linux-arm64', os: 'linux', arch: 'arm64', label: 'Linux · ARM64', requirements: 'Distribución Linux compatible · conexión a internet', available: false },
+  { id: 'windows-x64', os: 'windows', arch: 'x64', label: 'Windows 11 · x64 (previsto)', requirements: 'Instalador aún no publicado', available: false },
+  { id: 'ubuntu-x64', os: 'linux', arch: 'x64', label: 'Ubuntu Server LTS · x64 (previsto)', requirements: 'Instalador aún no publicado', available: false },
 ];
 
 const ALLOWED_DOWNLOAD_HOSTS = new Set([
@@ -37,7 +34,7 @@ const SHA256_REGEX = /^[a-fA-F0-9]{64}$/;
  * Validates a single release entry at runtime.
  * Guarantees that if available is true, it strictly has HTTPS URL on an allowed host and valid 64-char sha256.
  */
-export function validateRelease(raw: unknown): Release | null {
+export function validateRelease(raw: unknown, allowLocalMoto = false): Release | null {
   if (!raw || typeof raw !== 'object') return null;
   const r = raw as Record<string, unknown>;
 
@@ -61,7 +58,11 @@ export function validateRelease(raw: unknown): Release | null {
       try {
         const baseOrigin = typeof window !== 'undefined' ? window.location.origin : 'https://cispar.io';
         const parsedUrl = new URL(r.url, baseOrigin);
-        if (parsedUrl.protocol !== 'https:' || !ALLOWED_DOWNLOAD_HOSTS.has(parsedUrl.hostname)) {
+        const isLocalMotoUrl = allowLocalMoto
+          && parsedUrl.protocol === 'http:'
+          && (parsedUrl.hostname === 'localhost' || parsedUrl.hostname === '127.0.0.1')
+          && parsedUrl.port === '5000';
+        if (!isLocalMotoUrl && (parsedUrl.protocol !== 'https:' || !ALLOWED_DOWNLOAD_HOSTS.has(parsedUrl.hostname))) {
           available = false;
         } else {
           url = parsedUrl.toString();
@@ -105,8 +106,9 @@ export async function loadReleaseCatalog(): Promise<readonly Release[]> {
     const manifest = (await response.json()) as { releases?: unknown[] };
     if (!Array.isArray(manifest.releases)) return releaseCatalog;
 
+    const allowLocalMoto = import.meta.env?.DEV === true && import.meta.env?.VITE_LOCAL_MOTO === 'true';
     const validated = manifest.releases
-      .map(validateRelease)
+      .map((release) => validateRelease(release, allowLocalMoto))
       .filter((r): r is Release => r !== null);
 
     return validated.length > 0 ? validated : releaseCatalog;

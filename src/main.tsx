@@ -1,12 +1,9 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
-import './pages.css';
-import './hybrid.css';
-import './tech.css';
-import './contact.css';
 import './marketing.css';
-import './landing-sections.css';
+import './styles/design-tokens.css';
+import './styles/security-assessment.css';
 import { App } from './App';
 
 const root = document.getElementById('root');

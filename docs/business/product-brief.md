@@ -1,35 +1,13 @@
-# Product brief — CISPAR Agent
+# Product brief — CISPAR Security
 
-## Promesa
+La decisión D-006 de `docs/DECISIONS.md` sustituye el brief histórico de coding.
 
-CISPAR ayuda a una persona o equipo a trabajar con un agente de coding desde una aplicación descargable, con acceso administrado, uso medible y una experiencia sencilla.
+CISPAR es una plataforma de operaciones de ciberseguridad para pequeñas empresas que necesitan entender riesgos en equipos, cuentas y servicios sin contar con un analista de seguridad dedicado. La promesa de marca es detectar antes, entender mejor y responder con precisión.
 
-## Problema
+La web debe explicar problemas reconocibles: accesos inesperados, actividad inusual y vulnerabilidades que necesitan atención. Cada ejemplo debe mostrar qué ocurre, por qué importa y qué conviene revisar; los ejemplos son ilustrativos y no acreditan detecciones disponibles.
 
-Las herramientas de coding con IA pueden tener configuraciones complejas, credenciales dispersas y poca claridad sobre quién tiene acceso, cuánto consume y qué sucede cuando una cuenta cambia de estado.
+El alcance de producto contempla telemetría seleccionada, detecciones explicables, investigación y respuestas autorizadas. La disponibilidad requiere validación técnica. No hay evidencia de instaladores publicados, evaluación interna operativa ni SOC humano 24/7.
 
-## Experiencia deseada
+El visitante puede explorar sin login. El contacto debe funcionar con un destino real; una solicitud preparada por correo no equivale a una solicitud enviada. La descarga requiere un artefacto propio validado, versión y checksum. El instalador legado del SIEM basado en Docker no cumple el flujo base sencillo y no debe publicarse como agente endpoint.
 
-```text
-Descargar → abrir → login en navegador → confirmar equipo → usar
-```
-
-## Usuario inicial
-
-Segmento inicial de producción: desarrolladores independientes y equipos pequeños que quieren un asistente de coding listo para usar y con control de acceso centralizado. La segmentación puede ampliarse con evidencia comercial, pero no se debe cambiar el usuario objetivo en el copy sin registrar la decisión.
-
-## Valor que se debe demostrar en producción
-
-- Menor tiempo hasta la primera tarea.
-- Menos configuración local.
-- Control claro de acceso y consumo.
-- Revocación de una instalación sin soporte manual.
-- Respuestas útiles en tareas reales de coding.
-
-## Lo que no se debe prometer todavía
-
-- Seguridad perfecta del equipo local.
-- Protección contra toda modificación de un binario local.
-- Acceso incluido a suscripciones de terceros.
-- Soporte offline si no existe una política implementada.
-- Capacidades, modelos o integraciones que no hayan sido probados.
+No inventar clientes, métricas, certificaciones, precios ni integraciones. Usar lenguaje de negocio, evitando jerga de implementación y referencias a MVP en las piezas comerciales.

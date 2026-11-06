@@ -1,4 +1,4 @@
-# OpenSpec de CISPAR Landing y Agent
+# OpenSpec de CISPAR Security Landing
 
 Este directorio contiene las reglas y requisitos que deben leer las IAs antes de implementar cambios. La especificación busca convertir decisiones de producto en requisitos comprobables, no reemplazar el código ni el seguimiento de tareas.
 
@@ -17,4 +17,4 @@ Una tarea está terminada cuando tiene código, pruebas apropiadas, criterios de
 
 ## Alcance actual
 
-El alcance actual es el landing público y el producto CISPAR Agent descargable. El SIEM, Docker, el gateway local y el instalador existente se mantienen como contexto de otro producto hasta que se decida integrarlos explícitamente.
+El alcance actual es el landing público y CISPAR Security, una plataforma SaaS de operaciones de ciberseguridad/SOC. El agente y las capacidades de detección descritos en el plan son trabajo por construir; no asumir que hay instaladores o funciones publicados. La decisión vigente D-006 supersede descripciones históricas de coding agent.
