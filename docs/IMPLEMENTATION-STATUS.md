@@ -382,8 +382,8 @@ Documento de seguimiento vivo según la especificación de `PLAN-CISPAR-PLATAFOR
 
 ### Flujo de ramas y CI para `app → stage → main` — 2026-11-13
 
-- **Estado:** workflow preparado localmente; aún no publicado ni ejecutado en GitHub Actions.
+- **Estado:** workflow preparado y validado con actionlint localmente; aún no publicado ni ejecutado en GitHub Actions.
 - `.github/workflows/deploy.yml` ahora contempla PRs y pushes a `app`, `stage` y `main`, valida la dirección permitida de PR, ejecuta lint/tests/build, `npm audit`, CodeQL para JavaScript/TypeScript y Gitleaks sobre el historial con salida redactada. Al entrar a `stage`, guarda el bundle estático como artefacto de Actions por 7 días.
 - Las acciones externas agregadas están fijadas a SHA. La CI no recibe credenciales de GCP/AWS ni publica servicios cloud.
 - **Bloqueos remotos:** no existen todavía las ramas `app` ni `stage`; `main` no tiene protección configurada. GitHub informó que el repositorio privado Cispar-ISOC necesita actualizar el plan para activar protección de ramas. La verificación del workflow no sustituye esa protección.
-- **Validación pendiente:** no se ejecutaron lint, tests, build, escáneres ni workflow remoto en esta tarea. El stage actual genera un artefacto estático; no despliega una web de prueba. La migración a Firebase requiere resolver el endpoint Quick Scan y su runtime.
+- **Validación realizada:** `git diff --check` y `actionlint v1.7.12` pasaron. `npm run lint`, las 25 comprobaciones de `npm test`, el build con Vite 8, Gitleaks del historial y `npm audit --audit-level=high` pasaron; quedaron 8 dependencias con avisos moderados. Todavía no se ejecutó el workflow remoto. El stage actual genera un artefacto estático; no despliega una web. La migración a Firebase requiere resolver el endpoint Quick Scan y su runtime.
