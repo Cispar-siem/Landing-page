@@ -33,18 +33,17 @@ function BusinessIllustration({ view }: { view: View }): React.ReactElement {
 }
 
 export function Hero(): React.ReactElement {
-  const { locale } = useI18n();
-  const es = locale === 'es';
+  const { t } = useI18n();
   const [view, setView] = useState<View>('devices');
-  const labels = es ? { devices: 'Equipos', accounts: 'Cuentas', domain: 'Dominio' } : { devices: 'Devices', accounts: 'Accounts', domain: 'Domain' };
-  const details = es ? {
-    devices: 'Saber qué ocurre en los equipos donde trabaja tu gente.',
-    accounts: 'Entender qué accesos necesitan atención y qué conviene revisar.',
-    domain: 'Ver qué información de tu negocio está publicada en internet.',
-  } : {
-    devices: 'Understand what happens on the devices your people work with.',
-    accounts: 'Understand which access activity needs attention and review.',
-    domain: 'See what information about your business is public on the internet.',
+  const labels: Record<View, string> = {
+    devices: t('hero.scope.devices'),
+    accounts: t('hero.scope.accounts'),
+    domain: t('hero.scope.domain'),
+  };
+  const details: Record<View, string> = {
+    devices: t('hero.scope.devices.body'),
+    accounts: t('hero.scope.accounts.body'),
+    domain: t('hero.scope.domain.body'),
   };
   function startScan(): void {
     document.getElementById('assessment')?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' });
@@ -52,16 +51,18 @@ export function Hero(): React.ReactElement {
   return <section className="hero hero-centinela" aria-labelledby="hero-title">
     <div className="section-container centinela-hero-layout">
       <div className="centinela-hero-copy">
-        <h1 id="hero-title">{es ? 'Seguridad para' : 'Security for'}<br />{es ? 'tu empresa.' : 'your business.'}</h1>
-        <p className="centinela-hero-body">{es ? 'Diseñamos CISPAR para reunir equipos, cuentas y riesgos en una visión clara. Para que sepas qué revisar primero, sin tener un equipo de seguridad propio.' : 'We are designing CISPAR to bring devices, accounts and risks into one clear view. Know what to review first, without a security team of your own.'}</p>
-        <div className="centinela-hero-actions"><button type="button" className="btn-primary" onClick={startScan}>{es ? 'Revisar mi dominio' : 'Check my domain'}<span aria-hidden="true">↗</span></button><Link to="/contact">{es ? 'Hablar con CISPAR' : 'Talk to CISPAR'}<span aria-hidden="true">→</span></Link></div>
-        <p className="centinela-hero-available">{es ? 'Prueba hoy el chequeo público de tu dominio.' : 'Try the public domain check today.'}</p>
+        <p className="centinela-hero-kicker"><img className="centinela-kicker-mark" src="/cispar-centinela.png" alt="" width="25" height="25" />{t('hero.eyebrow')}<span className="centinela-kicker-divider" aria-hidden="true">/</span>{t('hero.status')}</p>
+        <h1 id="hero-title">{t('hero.title.line1')}<br /><em>{t('hero.title.line2')}</em></h1>
+        <p className="centinela-hero-body">{t('hero.body')}</p>
+        <div className="centinela-hero-actions"><button type="button" className="btn-primary" onClick={startScan}>{t('hero.assessmentCta')}<span aria-hidden="true">↗</span></button><Link to="/contact">{t('hero.sales')}<span aria-hidden="true">→</span></Link></div>
+        <p className="centinela-hero-available"><span aria-hidden="true" />{t('hero.quickScanAvailable')}</p>
       </div>
-      <figure className="centinela-business" aria-label={es ? 'Ámbitos propuestos para CISPAR: equipos, cuentas y dominio' : 'Proposed CISPAR scope: devices, accounts and domain'}>
-        <div className="business-picture"><BusinessIllustration view={view} /><img className="business-signature" src="/cispar-centinela.png" alt="" width="52" height="52" /></div>
-        <div className="business-choices" role="group" aria-label={es ? 'Explorar visión del producto' : 'Explore the product vision'}>{VIEWS.map(item => <button key={item} type="button" aria-pressed={view === item} onClick={() => setView(item)}>{labels[item]}</button>)}</div>
-        <div className="business-explanation" key={view} aria-live="polite"><p>{details[view]}</p>{view === 'domain' && <span>{es ? 'Disponible: chequeo público con Quick Scan.' : 'Available: public checks with Quick Scan.'}</span>}</div>
-        <figcaption>{es ? 'Equipos y cuentas: alcance previsto de CISPAR Security.' : 'Devices and accounts: planned CISPAR Security scope.'}</figcaption>
+      <figure className="centinela-business" aria-label={t('hero.figure.aria')}>
+        <div className="business-picture"><div className="business-picture-index" aria-hidden="true">{t('hero.figure.index')}</div><BusinessIllustration view={view} /><img className="business-signature" src="/cispar-centinela.png" alt="" width="52" height="52" /></div>
+        <div className="business-choices" role="group" aria-label={t('hero.figure.choicesAria')}>{VIEWS.map(item => <button key={item} type="button" aria-pressed={view === item} onClick={() => setView(item)}>{labels[item]}</button>)}</div>
+        <div className="business-explanation" key={view} aria-live="polite"><p>{details[view]}</p>{view === 'domain' && <span>{t('hero.scope.domain.available')}</span>}</div>
+        <div className="centinela-evidence-path" aria-hidden="true"><span><b>01</b>{t('hero.path.signal')}</span><i>────›</i><span><b>02</b>{t('hero.path.evidence')}</span><i>────›</i><span><b>03</b>{t('hero.path.review')}</span></div>
+        <figcaption>{t('hero.figure.caption')}</figcaption>
       </figure>
     </div>
   </section>;

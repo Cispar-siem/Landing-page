@@ -22,6 +22,7 @@ import { PricingPage } from './pages/PricingPage';
 import { ContactPage } from './pages/ContactPage';
 import { AuthPage } from './pages/AuthPage';
 import { I18nProvider } from './i18n/I18nContext';
+import './brand-direction.css';
 
 function SiteLayout({ children }: { readonly children: React.ReactNode }): React.ReactElement {
   return <><ScrollEffects /><Header /><main>{children}</main><Footer /></>;

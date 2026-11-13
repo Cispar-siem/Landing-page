@@ -2,6 +2,22 @@
 
 Este archivo contiene decisiones que deben mantenerse entre sesiones. Las decisiones nuevas se agregan arriba de las anteriores con fecha y motivo.
 
+## D-013 — 2026-11-13 — Flujo de ramas y objetivo de hosting
+
+El flujo de promoción de frontend y backend es `feature/* → app → stage → main`. Los PR hacia `stage` solo pueden venir de `app`; los PR hacia `main` solo pueden venir de `stage`. Los hallazgos de seguridad bloqueantes deben resolverse antes de promover. No crear vulnerabilidades reales en una rama que pueda desplegarse; los fixtures para validar scanners se aíslan y nunca se publican.
+
+El objetivo solicitado para la landing estática es Firebase Hosting en GCP. AWS queda como candidato para el backend del piloto, sujeto a confirmar la elegibilidad de la cuenta, el costo dentro/fuera de créditos y una arquitectura mTLS que el código soporte. El proveedor actual del backend y la publicación actual de la landing no se consideran migrados por esta decisión; no se despliega nada hasta validar sus contratos, configuración y presupuesto.
+
+Motivo: el fundador pidió explícitamente una promoción `app → stage → main`, priorizar cuotas gratuitas y trabajar los pipelines de Landing-page y Cispar-ISOC. Esta decisión sustituye la promoción directa a `main` de D-011 para los siguientes cambios y fija el destino objetivo sin afirmar que los servicios cloud ya estén configurados.
+
+## D-012 — 2026-11-13 — CISPAR se presenta como producto SaaS autogestionado
+
+CISPAR ofrece software de ciberseguridad SaaS para que cada cliente gestione desde su propia plataforma los equipos inscritos, las alertas, las investigaciones y las acciones autorizadas. CISPAR opera el SaaS; el equipo del cliente usa el producto para administrar su seguridad. La propuesta no es consultoría 1:1 ni un servicio humano de monitoreo o respuesta.
+
+La plataforma y sus capacidades están en preparación; no se debe dar a entender que el SaaS o sus agentes ya están disponibles. Por ahora, el único flujo público operativo es el Quick Scan de fuentes públicas del dominio. Las acciones de marketing invitan a conocer o solicitar información del piloto SaaS; no prometen que CISPAR revise manualmente los hallazgos o gestione la seguridad del cliente.
+
+Motivo: el fundador aclaró que CISPAR busca vender un SaaS autogestionado, no ayudar a cada cliente de forma individual. Esta decisión ajusta la voz y el recorrido comercial descritos en D-006 y D-009 sin alterar la disponibilidad real.
+
 ## D-011 — 2026-11-05 — Validación local y paquetes Ubuntu, Arch, macOS y Windows
 
 El fundador solicita preparar PRs hacia main y terminar paquetes reales para Ubuntu y Arch Linux, macOS y Windows. Primero se validará todo el recorrido en un laboratorio local sin aprovisionar servicios cloud de pago. El cliente final debe descargar, abrir, autorizar y quedar conectado sin instalar Docker, Node o Python. Docker/Moto y las máquinas virtuales son herramientas del laboratorio del desarrollador.

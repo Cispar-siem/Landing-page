@@ -4,6 +4,8 @@ La decisión D-006 de `docs/DECISIONS.md` sustituye el brief histórico de codin
 
 CISPAR es una plataforma de operaciones de ciberseguridad para pequeñas empresas que necesitan entender riesgos en equipos, cuentas y servicios sin contar con un analista de seguridad dedicado. La promesa de marca es detectar antes, entender mejor y responder con precisión.
 
+CISPAR se comercializa como SaaS autogestionado: la plataforma aporta visibilidad y herramientas para que el equipo del cliente gestione sus propios endpoints, alertas e investigaciones. No se presenta como consultoría 1:1 ni como monitoreo humano administrado. La consola, los agentes y estas capacidades siguen en preparación; no deben anunciarse como disponibles antes de validarlas y publicarlas.
+
 La web debe explicar problemas reconocibles: accesos inesperados, actividad inusual y vulnerabilidades que necesitan atención. Cada ejemplo debe mostrar qué ocurre, por qué importa y qué conviene revisar; los ejemplos son ilustrativos y no acreditan detecciones disponibles.
 
 El alcance de producto contempla telemetría seleccionada, detecciones explicables, investigación y respuestas autorizadas. La disponibilidad requiere validación técnica. No hay evidencia de instaladores publicados, evaluación interna operativa ni SOC humano 24/7.

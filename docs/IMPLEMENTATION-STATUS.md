@@ -1,3 +1,21 @@
+### Quick Scan como evaluación real del dominio — 2026-11-13
+
+- Se aclaró el recorrido de conversión: el Quick Scan consulta seis comprobaciones reales de DNS/correo y Certificate Transparency sobre el dominio autorizado. Cada resultado conserva observación, evidencia, impacto posible y próximo paso; no evalúa endpoints, cuentas internas ni actividad.
+- El resultado conserva tres salidas honestas: consultar información del piloto con el informe; completar la consulta si faltan fuentes; o, si no hay hallazgos en este alcance, explicar qué queda sin evaluar y que el SaaS sigue en desarrollo.
+- Se pasaron los textos del hero, Quick Scan y el contacto contextual a claves semánticas ES/EN. El formulario y sus requisitos de autorización/contacto se mantienen conforme a D-008.
+- Se simplificó el idioma para clientes: el formulario pide la dirección del sitio con ejemplo; cada revisión dice qué encontramos, por qué importa y qué hacer en palabras cotidianas. Fuentes y códigos quedan en el detalle técnico opcional.
+- Se alineó la marca con D-012: CISPAR se presenta como SaaS autogestionado por cada cliente; los CTA llevan a información del piloto y no prometen revisión 1:1. Solo el Quick Scan de dominio se declara disponible.
+- Se contrastó el copy con D-006, el brief del producto, el documento técnico de CISPAR-ISOC y la guía editorial de LinkedIn. `npm run build` y `git diff --check` pasaron; no se ejecutaron pruebas ni se publicó.
+- El tracker técnico `Cispar-ISOC/progress.md` dice que el MVP está listo para piloto, mientras la decisión D-011 del landing aún prioriza validar localmente los paquetes y no hay instaladores publicados. Por eso la comunicación pública mantiene el piloto «en preparación» hasta cerrar esa diferencia con evidencia de lanzamiento.
+- `npm run build` y auditoría local de claves estáticas/dinámicas ES/EN pasaron. Revisión visual móvil completa y hero de escritorio con Playwright: `/tmp/cispar-quickscan-purpose-full.png`, `/tmp/cispar-quickscan-purpose-desktop.png`. No se desplegó.
+
+### Dirección visual Centinela — 2026-11-13
+
+- Se reforzó la identidad de la landing con marfil y grafito como base, salvia para orientación, arcilla en ejemplos y naranja quemado como acento de acción, siguiendo la referencia del fundador.
+- El hero usa la promesa aprobada «Detecta antes. Decide con evidencia», marca el estado real del piloto y distingue el Quick Scan disponible del alcance de equipos/cuentas en desarrollo. La composición propia de Centinela y la ruta señal → evidencia → revisión reemplazan el aspecto plano; no se añadió una consola ni actividad ficticia.
+- Se unificaron botones, tarjetas del Quick Scan, ejemplos, sección de evidencia, pricing y FAQ bajo radios, bordes, fondos y ritmo compartidos. Se conservó el formulario y sus requisitos vigentes.
+- `npm run build` finalizó correctamente. Revisión visual local con Playwright a 1440 px y 390 px; capturas: `/tmp/cispar-brand-final-desktop.png`, `/tmp/cispar-brand-final-mobile.png`. No se ejecutó la suite de pruebas ni se desplegó.
+
 ### Hero rediseñado con Astra — 2026-10-30
 
 - Consulta explícita a Astra y revisión visual de https://sublime.security/ y https://www.runzero.com/ mediante Chromium. Se retira maqueta de alerta/login, navegación lateral, evidencia ficticia y flechas señal-contexto-revisión del hero.
@@ -361,3 +379,11 @@ Documento de seguimiento vivo según la especificación de `PLAN-CISPAR-PLATAFOR
 - Se protege `.env` y resultados locales con gitignore; la CI existente también comprueba PRs hacia main. El README se alinea con la disponibilidad real. Las fuentes y assets pendientes se preparan para PR sin secretos, dependencias locales ni resultados generados.
 - Evidencia de esta preparación: `npm test`, lint y build pasan; 20 pruebas Chromium de hero/Quick Scan/catálogo pasan. La prueba Moto compara también el checksum publicado con los bytes descargados. API ISOC local responde HTTP 200 con PostgreSQL real y 19 migraciones aplicadas.
 - Bloqueos reales registrados: builds Go Linux y Windows fallan; el cross-build Darwin pasa sin acreditar instalación en Mac; faltan módulos UI versionados y bootstrap seguro. Estos puntos no se marcan resueltos por la existencia de un PR.
+
+### Flujo de ramas y CI para `app → stage → main` — 2026-11-13
+
+- **Estado:** workflow preparado localmente; aún no publicado ni ejecutado en GitHub Actions.
+- `.github/workflows/deploy.yml` ahora contempla PRs y pushes a `app`, `stage` y `main`, valida la dirección permitida de PR, ejecuta lint/tests/build, `npm audit`, CodeQL para JavaScript/TypeScript y Gitleaks sobre el historial con salida redactada. Al entrar a `stage`, guarda el bundle estático como artefacto de Actions por 7 días.
+- Las acciones externas agregadas están fijadas a SHA. La CI no recibe credenciales de GCP/AWS ni publica servicios cloud.
+- **Bloqueos remotos:** no existen todavía las ramas `app` ni `stage`; `main` no tiene protección configurada. GitHub informó que el repositorio privado Cispar-ISOC necesita actualizar el plan para activar protección de ramas. La verificación del workflow no sustituye esa protección.
+- **Validación pendiente:** no se ejecutaron lint, tests, build, escáneres ni workflow remoto en esta tarea. El stage actual genera un artefacto estático; no despliega una web de prueba. La migración a Firebase requiere resolver el endpoint Quick Scan y su runtime.
