@@ -1,11 +1,15 @@
-name: Verify landing
+name: Landing CI
 
 on:
   pull_request:
     branches:
+      - app
+      - stage
       - main
   push:
     branches:
+      - app
+      - stage
       - main
   workflow_dispatch:
 
@@ -17,17 +21,47 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  branch-flow:
+    name: Enforce app to stage to main flow
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check allowed pull request direction
+        env:
+          HEAD_BRANCH: ${{ github.head_ref }}
+          BASE_BRANCH: ${{ github.base_ref }}
+          HEAD_REPOSITORY: ${{ github.event.pull_request.head.repo.full_name }}
+          BASE_REPOSITORY: ${{ github.repository }}
+        run: |
+          case "$BASE_BRANCH:$HEAD_BRANCH" in
+            stage:app|main:stage)
+              if [[ -z "$HEAD_REPOSITORY" || "$HEAD_REPOSITORY" != "$BASE_REPOSITORY" ]]; then
+                echo "Rejected promotion from an untrusted repository: $HEAD_REPOSITORY"
+                exit 1
+              fi
+              echo "Allowed promotion: $HEAD_BRANCH -> $BASE_BRANCH"
+              ;;
+            app:feature/*|app:fix/*|app:hotfix/*)
+              echo "Allowed feature integration: $HEAD_BRANCH -> app"
+              ;;
+            *)
+              echo "Rejected pull request direction: $HEAD_BRANCH -> $BASE_BRANCH"
+              echo "Use feature/* -> app, app -> stage, then stage -> main."
+              exit 1
+              ;;
+          esac
+
   build:
-    name: Build
+    name: Lint, test, and build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
 
       - name: Install dependencies
@@ -45,3 +79,77 @@ jobs:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
           VITE_PLATFORM_API_URL: ${{ vars.VITE_PLATFORM_API_URL || secrets.VITE_PLATFORM_API_URL }}
+
+      - name: Audit npm dependencies
+        run: npm audit --audit-level=high
+
+  secret-scan:
+    name: Scan git history for secrets
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout full history
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          fetch-depth: 0
+
+      - name: Setup Go for Gitleaks CLI
+        uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16
+        with:
+          go-version: '1.26.11'
+          cache: false
+
+      - name: Scan all Git history with redacted output
+        run: go run github.com/zricethezav/gitleaks/v8@v8.30.1 git --log-opts="--all" --redact --no-banner --exit-code 1 .
+
+  codeql:
+    name: CodeQL JavaScript and TypeScript
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@33d7b85da1a04171e211befe2c739303b9a4c066
+        with:
+          languages: javascript-typescript
+          queries: security-extended
+
+      - name: Analyze
+        uses: github/codeql-action/analyze@33d7b85da1a04171e211befe2c739303b9a4c066
+
+  stage-artifact:
+    name: Package stage preview
+    if: github.event_name == 'push' && github.ref == 'refs/heads/stage'
+    needs:
+      - build
+      - secret-scan
+      - codeql
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+
+      - name: Setup Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Build stage bundle
+        run: npm ci && npm run build
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          VITE_PLATFORM_API_URL: ${{ vars.VITE_PLATFORM_API_URL || secrets.VITE_PLATFORM_API_URL }}
+
+      - name: Upload stage bundle for review
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        with:
+          name: cispar-landing-stage-${{ github.sha }}
+          path: dist/
+          if-no-files-found: error
+          retention-days: 7
