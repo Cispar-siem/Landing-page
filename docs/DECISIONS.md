@@ -6,9 +6,9 @@ Este archivo contiene decisiones que deben mantenerse entre sesiones. Las decisi
 
 El flujo de promoción de frontend y backend es `feature/* → app → stage → main`. Los PR hacia `stage` solo pueden venir de `app`; los PR hacia `main` solo pueden venir de `stage`. Los hallazgos de seguridad bloqueantes deben resolverse antes de promover. No crear vulnerabilidades reales en una rama que pueda desplegarse; los fixtures para validar scanners se aíslan y nunca se publican.
 
-El objetivo solicitado para la landing estática es Firebase Hosting en GCP. AWS queda como candidato para el backend del piloto, sujeto a confirmar la elegibilidad de la cuenta, el costo dentro/fuera de créditos y una arquitectura mTLS que el código soporte. El proveedor actual del backend y la publicación actual de la landing no se consideran migrados por esta decisión; no se despliega nada hasta validar sus contratos, configuración y presupuesto.
+La landing se desplegará en Google Cloud Run, sin Firebase, para servir el frontend y el endpoint Quick Scan del mismo origen. GitHub Actions usará OIDC/Workload Identity Federation y limitará el despliegue a `stage`; no se guardarán llaves de cuenta de servicio en GitHub. AWS queda como candidato separado para el backend del piloto, sujeto a confirmar elegibilidad, costo y arquitectura mTLS. No se desplegará Cloud Run hasta que el proyecto tenga facturación habilitada y un límite de gasto mensual aprobado. El proveedor actual del backend no se considera migrado.
 
-Motivo: el fundador pidió explícitamente una promoción `app → stage → main`, priorizar cuotas gratuitas y trabajar los pipelines de Landing-page y Cispar-ISOC. Esta decisión sustituye la promoción directa a `main` de D-011 para los siguientes cambios y fija el destino objetivo sin afirmar que los servicios cloud ya estén configurados.
+Motivo: el fundador pidió explícitamente la promoción `app → stage → main`, priorizar cuotas gratuitas y trabajar los pipelines de Landing-page y Cispar-ISOC; después aclaró que el hosting debe ser GCP y que no se usará Firebase. Esta decisión sustituye la promoción directa a `main` de D-011 para los siguientes cambios y fija el destino sin afirmar que los servicios cloud estén desplegados.
 
 ## D-012 — 2026-11-13 — CISPAR se presenta como producto SaaS autogestionado
 
