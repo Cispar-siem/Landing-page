@@ -7,10 +7,15 @@
     "dev": "vite",
     "dev:test": "vite --config vite.config.test.ts",
     "build": "tsc && vite build",
+    "gcp-build": "npm run build",
+    "start": "node server/cloud-run.mjs",
     "preview": "vite preview",
     "lint": "eslint src --ext .ts,.tsx",
-    "test": "node tests/platform.test.mjs && node tests/releases.test.mjs && node --test tests/quick-scan.test.mjs",
+    "test": "node tests/platform.test.mjs && node tests/releases.test.mjs && node --test tests/quick-scan.test.mjs tests/cloud-run.test.mjs",
     "test:e2e": "playwright test"
+  },
+  "engines": {
+    "node": "22.x"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.43.0",
