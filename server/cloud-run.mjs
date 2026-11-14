@@ -1,5 +1,5 @@
 import { createServer } from 'node:http';
-import { readFile, stat } from 'node:fs/promises';
+import { open } from 'node:fs/promises';
 import { extname, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { handleQuickScanRequest } from './quick-scan.mjs';
@@ -55,6 +55,16 @@ function toWebRequest(request) {
   return new Request(`http://${host}${request.url || '/'}`, init);
 }
 
+async function readStaticFile(filePath) {
+  const file = await open(filePath, 'r');
+  try {
+    if (!(await file.stat()).isFile()) return null;
+    return await file.readFile();
+  } finally {
+    await file.close();
+  }
+}
+
 function createHandler({ distDir = DIST_DIR, quickScan = handleQuickScanRequest, limiter = createQuickScanLimiter() } = {}) {
   return async (request, response) => {
     const pathname = new URL(request.url || '/', 'http://localhost').pathname;
@@ -91,24 +101,32 @@ function createHandler({ distDir = DIST_DIR, quickScan = handleQuickScanRequest,
     }
 
     let filePath = requestedFile;
+    let body;
     try {
-      if (!(await stat(filePath)).isFile()) filePath = resolve(distDir, 'index.html');
+      body = await readStaticFile(filePath);
     } catch {
+      body = null;
+    }
+    if (body === null || body === undefined) {
       filePath = resolve(distDir, 'index.html');
+      try {
+        body = await readStaticFile(filePath);
+      } catch {
+        body = null;
+      }
     }
-    try {
-      const body = await readFile(filePath);
-      const contentType = MIME_TYPES.get(extname(filePath)) || 'application/octet-stream';
-      response.writeHead(200, {
-        'content-type': contentType,
-        'x-content-type-options': 'nosniff',
-        'referrer-policy': 'strict-origin-when-cross-origin',
-        'cache-control': filePath === resolve(distDir, 'index.html') ? 'no-cache' : 'public, max-age=31536000, immutable',
-      });
-      response.end(body);
-    } catch {
+    if (body === null || body === undefined) {
       send(response, 404, 'Not found\n');
+      return;
     }
+    const contentType = MIME_TYPES.get(extname(filePath)) || 'application/octet-stream';
+    response.writeHead(200, {
+      'content-type': contentType,
+      'x-content-type-options': 'nosniff',
+      'referrer-policy': 'strict-origin-when-cross-origin',
+      'cache-control': filePath === resolve(distDir, 'index.html') ? 'no-cache' : 'public, max-age=31536000, immutable',
+    });
+    response.end(body);
   };
 }
 
