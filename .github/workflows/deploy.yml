@@ -153,3 +153,65 @@ jobs:
           path: dist/
           if-no-files-found: error
           retention-days: 7
+
+  deploy-gcp-stage:
+    name: Deploy stage to Google Cloud Run
+    if: >-
+      github.event_name == 'push' && github.ref == 'refs/heads/stage' &&
+      vars.GCP_PROJECT_ID != '' && vars.GCP_WORKLOAD_IDENTITY_PROVIDER != '' &&
+      vars.GCP_SERVICE_ACCOUNT != '' && vars.GCP_RUNTIME_SERVICE_ACCOUNT != ''
+    needs:
+      - build
+      - secret-scan
+      - codeql
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+      GCP_REGION: ${{ vars.GCP_REGION || 'us-central1' }}
+      GCP_WORKLOAD_IDENTITY_PROVIDER: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+      GCP_SERVICE_ACCOUNT: ${{ vars.GCP_SERVICE_ACCOUNT }}
+      GCP_RUNTIME_SERVICE_ACCOUNT: ${{ vars.GCP_RUNTIME_SERVICE_ACCOUNT }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+
+      - name: Authenticate to Google Cloud with GitHub OIDC
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093
+        with:
+          workload_identity_provider: ${{ env.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ env.GCP_SERVICE_ACCOUNT }}
+
+      - name: Set up gcloud
+        uses: google-github-actions/setup-gcloud@e427ad8a34f8676edf47cf7d7925499adf3eb74f
+
+      - name: Prepare frontend build configuration
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          VITE_PLATFORM_API_URL: ${{ vars.VITE_PLATFORM_API_URL || secrets.VITE_PLATFORM_API_URL }}
+        run: |
+          node --input-type=module -e 'import { writeFileSync } from "node:fs"; const keys = ["VITE_SUPABASE_URL", "VITE_SUPABASE_ANON_KEY", "VITE_PLATFORM_API_URL"]; const config = Object.fromEntries(keys.filter((key) => process.env[key]).map((key) => [key, process.env[key]])); writeFileSync(`${process.env.RUNNER_TEMP}/cispar-build-env.json`, JSON.stringify(config));'
+
+      - name: Deploy stage service
+        run: >-
+          gcloud run deploy cispar-landing-stage
+          --source .
+          --build-env-vars-file "$RUNNER_TEMP/cispar-build-env.json"
+          --project "$GCP_PROJECT_ID"
+          --region "$GCP_REGION"
+          --platform managed
+          --service-account "$GCP_RUNTIME_SERVICE_ACCOUNT"
+          --allow-unauthenticated
+          --min 0
+          --max 1
+          --concurrency 10
+          --cpu 1
+          --memory 512Mi
+          --timeout 30s
+          --quiet
+
+      - name: Show deployed stage URL
+        run: gcloud run services describe cispar-landing-stage --project "$GCP_PROJECT_ID" --region "$GCP_REGION" --format='value(status.url)'
